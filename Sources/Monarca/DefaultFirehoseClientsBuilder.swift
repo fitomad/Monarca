@@ -61,12 +61,18 @@ public final class DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 		messageManager = AllMessagesManager()
     }
     
-	public func build() throws(BskyFirehoseError) -> BskyFirehoseClient {
+	public func build() async throws(BskyFirehoseError) -> BskyFirehoseClient {
 		guard let _ = settings.host else {
 			throw BskyFirehoseError.invalidConnectionParameters
 		}
 		
-		return BskyFirehoseClient(settings: settings,
-						messageManager: messageManager)
+		let client = BskyFirehoseClient(settings: settings)
+		
+		Task { @MainActor in
+			await client.manageMessages(using: messageManager)
+		}
+		
+		
+		return client
     }
 }

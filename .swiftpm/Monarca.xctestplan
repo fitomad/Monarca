@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "C4C69377-9568-4494-A425-FCC88C8D5F0E",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "MonarcaTests",
+        "name" : "MonarcaTests"
+      }
+    }
+  ],
+  "version" : 1
+}

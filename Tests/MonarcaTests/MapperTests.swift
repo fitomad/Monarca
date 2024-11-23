@@ -77,7 +77,10 @@ struct MapperTests {
 			
 		let url = try mapper.mapToURL(from: settings)
 		
-		#expect(url.absoluteString == Constants.multipleCollectionElementsURL)
+		let regex = try Regex(Constants.fullParameterRegEx)
+		let match = try regex.firstMatch(in: url.absoluteString)
+	
+		#expect(match != nil)
 	}
 }
 
@@ -89,5 +92,6 @@ extension MapperTests {
 	fileprivate enum Constants {
 		static let singleCollectionElementsURL = "wss://jetstream1.us-east.bsky.network/subscribe?wantedCollections=swift&wantedDids=did:97531"
 		static let multipleCollectionElementsURL = "wss://jetstream1.us-east.bsky.network/subscribe?wantedCollections=swift&wantedCollections=objc&wantedDids=did:97531&wantedDids=did:13579"
+		static let fullParameterRegEx = #"wss\:\/\/jetstream1\.us-east\.bsky\.network\/subscribe\?wantedCollections\=swift\&wantedCollections\=objc\&wantedDids\=did\:97531\&wantedDids\=did\:13579\&compress\=false\&cursor=\d{1,}\&maxMessageSizeBytes\=2048\&requireHello\=false"#
 	}
 }

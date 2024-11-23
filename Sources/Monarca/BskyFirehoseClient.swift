@@ -1,29 +1,26 @@
 import Foundation
 
-public typealias MessageReceived = (BskyMessage) -> Void
-public typealias ErrorReceived = (any Error) -> Void
+public typealias MessageReceivedClosure = (BskyMessage) -> Void
+public typealias ErrorReceivedClosure = (any Error) -> Void
 
-public final class BskyFirehoseClient: Sendable {
-	public var onMessageReceived: MessageReceived?
-	public var onErrorProcessingMessage: ErrorReceived?
+public actor BskyFirehoseClient: Sendable {
+	private var onMessageReceived: MessageReceivedClosure?
+	private var onErrorProcessingMessage: ErrorReceivedClosure?
 	public let settings: BskyFirehoseSettings
 	
 	private lazy var mapper = BskyFirehoseSettingsMapper()
 	private var bskyMessageManager: any BskyMessageManager = AllMessagesManager()
 	
 	private var websocketTask: URLSessionWebSocketTask?
+	private var status: BskyFirehoseClient.Status = .closed
 	
 	public var isConnected: Bool {
 		guard let websocketTask else { return false }
-		return websocketTask.state == .running
+		return status == .connected
 	}
 	
-	init(settings: BskyFirehoseSettings, messageManager: (any BskyMessageManager)? = nil) {
+	init(settings: BskyFirehoseSettings) {
 		self.settings = settings
-		
-		if let messageManager {
-			self.bskyMessageManager = messageManager
-		}
 	}
 	
 	private func connect() throws(BskyFirehoseError) {
@@ -42,6 +39,7 @@ public final class BskyFirehoseClient: Sendable {
 		
 		try connect()
 		websocketTask?.resume()
+		status = .connected
 		
 		Task {
 			try await processIncomingMessage()
@@ -50,6 +48,7 @@ public final class BskyFirehoseClient: Sendable {
 	
 	public func stop() {
 		websocketTask?.cancel()
+		status = .closed
 	}
 	
 	private func processIncomingMessage() async throws {
@@ -77,5 +76,24 @@ public final class BskyFirehoseClient: Sendable {
 		await Task.yield()
 				
 		try await processIncomingMessage()
+	}
+	
+	public func onMessageReceived(_ perform: @escaping MessageReceivedClosure) {
+		onMessageReceived = perform
+	}
+	
+	public func onErrorReceived(_ perform: @escaping ErrorReceivedClosure) {
+		onErrorProcessingMessage = perform
+	}
+	
+	public func manageMessages(using messageManager: any BskyMessageManager) {
+		bskyMessageManager = messageManager
+	}
+}
+
+extension BskyFirehoseClient {
+	enum Status {
+		case connected
+		case closed
 	}
 }
