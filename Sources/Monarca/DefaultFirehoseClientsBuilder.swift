@@ -66,7 +66,8 @@ public final class DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 			throw BskyFirehoseError.invalidConnectionParameters
 		}
 		
-		return BskyFirehoseClient(settings: settings,
-						messageManager: messageManager)
+		let client = BskyFirehoseClient(settings: settings)
+		
+		return client
     }
 }

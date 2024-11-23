@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct BskyFirehoseSettings {
+public struct BskyFirehoseSettings: Sendable {
     public internal(set) var host: FireshoseHost?
 	public internal(set) var collections: [String]?
 	public internal(set) var decentralizedIdentifiers: [String]?

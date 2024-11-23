@@ -1,35 +1,32 @@
 import Foundation
 
-public typealias MessageReceived = (BskyMessage) -> Void
-public typealias ErrorReceived = (any Error) -> Void
+public typealias MessageReceivedClosure = (BskyMessage) -> Void
+public typealias ErrorReceivedClosure = (any Error) -> Void
 
-public final class BskyFirehoseClient: Sendable {
-	public var onMessageReceived: MessageReceived?
-	public var onErrorProcessingMessage: ErrorReceived?
+public final class BskyFirehoseClient {
+	private var onMessageReceived: MessageReceivedClosure?
+	private var onErrorProcessingMessage: ErrorReceivedClosure?
 	public let settings: BskyFirehoseSettings
 	
 	private lazy var mapper = BskyFirehoseSettingsMapper()
 	private var bskyMessageManager: any BskyMessageManager = AllMessagesManager()
 	
 	private var websocketTask: URLSessionWebSocketTask?
+	private var status: BskyFirehoseClient.Status = .closed
 	
 	public var isConnected: Bool {
-		guard let websocketTask else { return false }
-		return websocketTask.state == .running
+		status == .connected
 	}
 	
-	init(settings: BskyFirehoseSettings, messageManager: (any BskyMessageManager)? = nil) {
+	init(settings:  BskyFirehoseSettings) {
 		self.settings = settings
-		
-		if let messageManager {
-			self.bskyMessageManager = messageManager
-		}
 	}
 	
 	private func connect() throws(BskyFirehoseError) {
 		do {
 			let firehoseURL = try mapper.mapToURL(from: settings)
 			websocketTask = URLSession.shared.webSocketTask(with: firehoseURL)
+			status = .connected
 		} catch is FirehoseMapperError {
 			throw .invalidFirehoseURL
 		}
@@ -43,13 +40,15 @@ public final class BskyFirehoseClient: Sendable {
 		try connect()
 		websocketTask?.resume()
 		
-		Task {
+		Task(priority: .background) {
 			try await processIncomingMessage()
 		}
 	}
 	
 	public func stop() {
-		websocketTask?.cancel()
+		guard let websocketTask else { return }
+		websocketTask.cancel(with: .normalClosure, reason: nil)
+		status = .closed
 	}
 	
 	private func processIncomingMessage() async throws {
@@ -77,5 +76,20 @@ public final class BskyFirehoseClient: Sendable {
 		await Task.yield()
 				
 		try await processIncomingMessage()
+	}
+	
+	public func onMessageReceived(_ perform: @escaping MessageReceivedClosure) {
+		self.onMessageReceived = perform
+	}
+	
+	public func onErrorProcessingMessage(_ perform: @escaping ErrorReceivedClosure) {
+		self.onErrorProcessingMessage = perform
+	}
+}
+
+extension BskyFirehoseClient {
+	enum Status {
+		case connected
+		case closed
 	}
 }

@@ -6,7 +6,7 @@
 //
 
 
-public protocol BskyFirehoseClientBuilder {
+public protocol BskyFirehoseClientBuilder: Sendable {
     func withHost(_ server: FireshoseHost) -> Self
     func withCollections(_ collection: [String]) -> Self
     func withDecentralizedIdentifiers(_ identifiers: [String]) -> Self
