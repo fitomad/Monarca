@@ -11,7 +11,7 @@ public final class DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 	private var settings = BskyFirehoseSettings()
 	private var messageManager: any BskyMessageManager
 	
-	init() {
+	public init() {
 		settings = BskyFirehoseSettings()
 		messageManager = AllMessagesManager()
 	}
