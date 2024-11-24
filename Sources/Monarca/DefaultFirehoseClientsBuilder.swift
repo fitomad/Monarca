@@ -10,7 +10,7 @@ import Foundation
 public struct DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 	private let settings: BskyFirehoseSettings
 	
-	init() {
+	public init() {
 		settings = BskyFirehoseSettings()
 	}
     
