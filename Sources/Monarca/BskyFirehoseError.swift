@@ -11,4 +11,5 @@ public enum BskyFirehoseError: Error {
 	case invalidFirehoseURL
 	case invalidConnectionParameters
 	case invalidData
+	case messageManagerNotAvailable
 }

@@ -7,8 +7,9 @@
 
 import Foundation
 
-public protocol BskyMessageHandler {
-    var nextHandler: (any BskyMessageHandler)? { get set }
-    
-    func processMessage(content data: Data, using: JSONDecoder) throws -> BskyMessage
+public protocol BskyMessageHandler: Sendable {
+    //var nextHandler: (any BskyMessageHandler)? { get }
+	
+    func setNextHandler(_ handler: any BskyMessageHandler) async
+    func processMessage(content data: Data, using: JSONDecoder) async throws -> BskyMessage
 }

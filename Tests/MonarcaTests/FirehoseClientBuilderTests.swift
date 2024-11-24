@@ -10,134 +10,134 @@ import Testing
 @testable import Monarca
 
 @Suite("BskyFirehose client builder")
-struct BuilerTests {
+struct BuilderTests {
 	@Test("", .tags(.builder))
 	func testDefaultBuilding() async throws {
-		#expect(throws: BskyFirehoseError.invalidConnectionParameters) {
-			let _ = try DefaultFirehoseClientBuilder().build()
+		await #expect(throws: BskyFirehoseError.invalidConnectionParameters) {
+			let _ = try await DefaultFirehoseClientBuilder().build()
 		}
 	}
 	
 	@Test("", .tags(.builder), arguments: Constants.serverList)
 	func testClientURL(server: FireshoseHost) async throws {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(server)
 			.build()
 		
-		#expect(firehoseClient.settings.host != nil)
-		#expect(firehoseClient.settings.host!.endpoint == server.endpoint)
+		#expect(await firehoseClient.settings.host != nil)
+		#expect(await firehoseClient.settings.host!.endpoint == server.endpoint)
 	}
 	
 	@Test("", .tags(.builder), arguments: Constants.customServerList)
 	func testClientCustomURL(_ custom: FireshoseHost) async throws  {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(custom)
 			.build()
 		
-		#expect(firehoseClient.settings.host != nil)
-		#expect(firehoseClient.settings.host!.endpoint == custom.endpoint)
+		#expect(await firehoseClient.settings.host != nil)
+		#expect(await firehoseClient.settings.host!.endpoint == custom.endpoint)
 	}
 	
 	@Test("", .tags(.builder))
 	func testClientCollections() async throws  {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withCollections([])
 			.build()
 		
-		#expect(firehoseClient.settings.collections != nil)
-		#expect(firehoseClient.settings.collections!.isEmpty)
+		#expect(await firehoseClient.settings.collections != nil)
+		#expect(await firehoseClient.settings.collections!.isEmpty)
 	}
 	
 	@Test("", .tags(.builder))
 	func testClientCustomCollections() async throws  {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withCollections([ "a", "b", "c" ])
 			.build()
 		
-		#expect(firehoseClient.settings.collections != nil)
-		#expect(firehoseClient.settings.collections!.count == 3)
-		#expect(firehoseClient.settings.collections!.contains("a"))
-		#expect(firehoseClient.settings.collections!.contains("b"))
-		#expect(firehoseClient.settings.collections!.contains("c"))
+		#expect(await firehoseClient.settings.collections != nil)
+		#expect(await firehoseClient.settings.collections!.count == 3)
+		#expect(await firehoseClient.settings.collections!.contains("a"))
+		#expect(await firehoseClient.settings.collections!.contains("b"))
+		#expect(await firehoseClient.settings.collections!.contains("c"))
 	}
 	
 	@Test("", .tags(.builder))
 	func testClientIdentifiers() async throws  {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withDecentralizedIdentifiers([])
 			.build()
 		
-		#expect(firehoseClient.settings.decentralizedIdentifiers != nil)
-		#expect(firehoseClient.settings.decentralizedIdentifiers!.isEmpty)
+		#expect(await firehoseClient.settings.decentralizedIdentifiers != nil)
+		#expect(await firehoseClient.settings.decentralizedIdentifiers!.isEmpty)
 	}
 	
 	@Test("", .tags(.builder))
 	func testClientCustomIdentifiers() async throws  {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withDecentralizedIdentifiers(Constants.customIdentifierList)
 			.build()
 		
-		#expect(firehoseClient.settings.decentralizedIdentifiers != nil)
-		#expect(firehoseClient.settings.decentralizedIdentifiers!.count == Constants.customIdentifierList.count)
+		#expect(await firehoseClient.settings.decentralizedIdentifiers != nil)
+		#expect(await firehoseClient.settings.decentralizedIdentifiers!.count == Constants.customIdentifierList.count)
 	}
 	
 	@Test("", .tags(.builder))
 	func testClientCompressionEnabled() async throws  {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withCompressionEnabled(true)
 			.build()
 		
-		#expect(firehoseClient.settings.isCompressionEnabled != nil)
-		#expect(firehoseClient.settings.isCompressionEnabled!)
+		#expect(await firehoseClient.settings.isCompressionEnabled != nil)
+		#expect(await firehoseClient.settings.isCompressionEnabled!)
 	}
 	
 	@Test("", .tags(.builder))
 	func testClientCompressionDisabled() async throws  {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withCompressionEnabled(false)
 			.build()
 		
-		#expect(firehoseClient.settings.isCompressionEnabled != nil)
-		#expect(firehoseClient.settings.isCompressionEnabled! == false)
+		#expect(await firehoseClient.settings.isCompressionEnabled != nil)
+		#expect(await firehoseClient.settings.isCompressionEnabled! == false)
 	}
 	
 	@Test("", .tags(.builder))
 	func testClientHelloCommandEnabled() async throws  {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withHelloExecution(true)
 			.build()
 		
-		#expect(firehoseClient.settings.isHelloRequired != nil)
-		#expect(firehoseClient.settings.isHelloRequired!)
+		#expect(await firehoseClient.settings.isHelloRequired != nil)
+		#expect(await firehoseClient.settings.isHelloRequired!)
 	}
 	
 	@Test("", .tags(.builder))
 	func testClientHelloCommandDisabled() async throws  {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withHelloExecution(false)
 			.build()
 		
-		#expect(firehoseClient.settings.isHelloRequired != nil)
-		#expect(firehoseClient.settings.isHelloRequired! == false)
+		#expect(await firehoseClient.settings.isHelloRequired != nil)
+		#expect(await firehoseClient.settings.isHelloRequired! == false)
 	}
 	
 	@Test("", .tags(.builder), arguments: Constants.messagesSizeList)
 	func testMessageSizeLimit(testSet: (sut: MessageSize, expectedValue: Int)) async throws  {
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withMaximumMessageSize(testSet.sut)
 			.build()
 		
-		#expect(firehoseClient.settings.maximumMessageSize != nil)
-		#expect(firehoseClient.settings.maximumMessageSize! == testSet.expectedValue)
+		#expect(await firehoseClient.settings.maximumMessageSize != nil)
+		#expect(await firehoseClient.settings.maximumMessageSize! == testSet.expectedValue)
 	}
 	
 	@Test("", .tags(.builder), arguments: Constants.playbackList)
@@ -146,21 +146,22 @@ struct BuilerTests {
 		let lowEpochBound = currentEpochTimestamp - 50_0000
 		let maxEpochBound = currentEpochTimestamp + 50_0000
 		
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withPlayback(sut)
 			.build()
 		
-		#expect(firehoseClient.settings.playback != nil)
-		#expect(firehoseClient.settings.playback!.timeValue > lowEpochBound)
-		#expect(firehoseClient.settings.playback!.timeValue < maxEpochBound)
+		#expect(await firehoseClient.settings.playback != nil)
+		#expect(await firehoseClient.settings.playback!.timeValue > lowEpochBound)
+		#expect(await firehoseClient.settings.playback!.timeValue < maxEpochBound)
 	}
 	
 	@Test("", .tags(.builder))
 	func testClientMessageManager() async throws  {
 		let mockMessageManager = MockMessageManager()
+		var builder = DefaultFirehoseClientBuilder()
 		
-		let firehoseClient = try DefaultFirehoseClientBuilder()
+		let firehoseClient = try await builder
 			.withHost(.usaEast1)
 			.withMessageManager(mockMessageManager)
 			.build()
@@ -168,9 +169,9 @@ struct BuilerTests {
 	
 	@Test("", .tags(.builder))
 	func testBuilderReset() async throws  {
-		let builder = DefaultFirehoseClientBuilder()
+		var builder = DefaultFirehoseClientBuilder()
 		
-		var firehoseClient = try builder
+		var firehoseClient  = try await builder
 			.withHost(.usaEast1)
 			.withCollections([ "a", "b", "c" ])
 			.withDecentralizedIdentifiers(Constants.customIdentifierList)
@@ -180,28 +181,27 @@ struct BuilerTests {
 			.withPlayback(.seconds(5))
 			.build()
 			
+		#expect(await firehoseClient.settings.host != nil)
+		#expect(await firehoseClient.settings.collections != nil)
+		#expect(await firehoseClient.settings.decentralizedIdentifiers != nil)
+		#expect(await firehoseClient.settings.isCompressionEnabled != nil)
+		#expect(await firehoseClient.settings.isHelloRequired != nil)
+		#expect(await firehoseClient.settings.maximumMessageSize != nil)
+		#expect(await firehoseClient.settings.playback != nil)
 		
-		#expect(firehoseClient.settings.host != nil)
-		#expect(firehoseClient.settings.collections != nil)
-		#expect(firehoseClient.settings.decentralizedIdentifiers != nil)
-		#expect(firehoseClient.settings.isCompressionEnabled != nil)
-		#expect(firehoseClient.settings.isHelloRequired != nil)
-		#expect(firehoseClient.settings.maximumMessageSize != nil)
-		#expect(firehoseClient.settings.playback != nil)
+		await builder.reset()
 		
-		builder.reset()
-		
-		firehoseClient = try builder
+		firehoseClient = try await builder
 			.withHost(.usaEast1)
 			.build()
 		
-		#expect(firehoseClient.settings.host != nil)
-		#expect(firehoseClient.settings.collections == nil)
-		#expect(firehoseClient.settings.decentralizedIdentifiers == nil)
-		#expect(firehoseClient.settings.isCompressionEnabled == nil)
-		#expect(firehoseClient.settings.isHelloRequired == nil)
-		#expect(firehoseClient.settings.maximumMessageSize == nil)
-		#expect(firehoseClient.settings.playback == nil)
+		#expect(await firehoseClient.settings.host != nil)
+		#expect(await firehoseClient.settings.collections == nil)
+		#expect(await firehoseClient.settings.decentralizedIdentifiers == nil)
+		#expect(await firehoseClient.settings.isCompressionEnabled == nil)
+		#expect(await firehoseClient.settings.isHelloRequired == nil)
+		#expect(await firehoseClient.settings.maximumMessageSize == nil)
+		#expect(await firehoseClient.settings.playback == nil)
 	}
 }
 
@@ -255,17 +255,5 @@ fileprivate enum Constants {
 			Playback.seconds(15),
 			Playback.minutes(3)
 		]
-	}
-}
-
-extension BuilerTests {
-	struct MockMessageManager: BskyMessageManager {
-		func processMessage(content data: Data) throws -> BskyMessage {
-			.commit
-		}
-		
-		func processMessage(string value: String) throws -> BskyMessage {
-			.commit
-		}
 	}
 }

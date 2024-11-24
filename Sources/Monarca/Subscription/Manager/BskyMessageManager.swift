@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol BskyMessageManager {
-	func processMessage(content data: Data) throws -> BskyMessage
-    func processMessage(string value: String) throws -> BskyMessage
+public protocol BskyMessageManager: Sendable {
+	func processMessage(content data: Data) async throws -> BskyMessage
+    func processMessage(string value: String) async throws -> BskyMessage
 }
