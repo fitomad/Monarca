@@ -13,6 +13,7 @@ actor AllMessagesManager: BskyMessageManager {
     
     init() async {
         handlersChain = [
+			CommitMessageHandler(),
             IdentityMessageHandler(),
 			AccountMessageHandler()
         ]
