@@ -159,12 +159,14 @@ struct BuilderTests {
 	@Test("", .tags(.builder))
 	func testClientMessageManager() async throws  {
 		let mockMessageManager = MockMessageManager()
-		var builder = DefaultFirehoseClientBuilder()
+		let builder = DefaultFirehoseClientBuilder()
 		
 		let firehoseClient = try await builder
 			.withHost(.usaEast1)
 			.withMessageManager(mockMessageManager)
 			.build()
+		
+		#expect(await firehoseClient.settings.messageManager != nil)
 	}
 	
 	@Test("", .tags(.builder))

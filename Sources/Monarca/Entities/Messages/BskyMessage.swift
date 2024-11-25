@@ -8,7 +8,7 @@
 import Foundation
 
 public enum BskyMessage: Sendable {
-    case identity(message: BskyMessage.Identity)
+    case identity(payload: BskyMessage.Identity)
     case commit
-    case account
+	case account(payload: BskyMessage.Account)
 }
