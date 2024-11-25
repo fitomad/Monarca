@@ -12,7 +12,15 @@ extension BskyMessage {
 		public struct Payload: Codable, Sendable {
 			let cid: String
 			let operation: BskyMessage.Commit.Operation
-			let collection: String
+			let collection: Collection
+			let relatedKey: String
+			
+			private enum CodingKeys: String, CodingKey {
+				case cid
+				case operation
+				case collection
+				case relatedKey = "rkey"
+			}
 		}
 		
 		let did: String
@@ -30,7 +38,7 @@ extension BskyMessage {
 }
 
 extension BskyMessage.Commit {
-	public enum Operation: Codable, Sendable {
+	public enum Operation: String, Codable, Sendable {
 		case create
 		case update
 		case delete
