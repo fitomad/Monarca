@@ -8,8 +8,8 @@
 import Foundation
 
 extension BskyMessage {
-    public struct Identity: Codable {
-        public struct Payload: Codable {
+    public struct Identity: Codable, Sendable {
+        public struct Payload: Codable, Sendable {
             let did: String
             let userHandle: String
             let sequence: Int

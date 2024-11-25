@@ -7,8 +7,8 @@
 
 import Foundation
 
-final class IdentityMessageHandler {
-    var nextHandler: (any BskyMessageHandler)?
+actor IdentityMessageHandler: Sendable {
+	private(set) var nextHandler: (any BskyMessageHandler)?
     
     init(nextHandler: (any BskyMessageHandler)? = nil) {
         self.nextHandler = nextHandler
@@ -16,7 +16,11 @@ final class IdentityMessageHandler {
 }
 
 extension IdentityMessageHandler: BskyMessageHandler {
-    func processMessage(content data: Data, using decoder: JSONDecoder) throws -> BskyMessage {
+	func setNextHandler(_ handler: any BskyMessageHandler) async {
+		self.nextHandler = handler
+	}
+	
+    func processMessage(content data: Data, using decoder: JSONDecoder) async throws -> BskyMessage {
         do {
             let identityMessage = try decoder.decode(BskyMessage.Identity.self, from: data)
             print("✅ \(identityMessage)")
@@ -26,7 +30,7 @@ extension IdentityMessageHandler: BskyMessageHandler {
                 throw BskyMessageManagerError.unprocessable(message: data)
             }
             
-            return try nextHandler.processMessage(content: data, using: decoder)
+            return try await nextHandler.processMessage(content: data, using: decoder)
         }
         
     }

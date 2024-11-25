@@ -10,7 +10,7 @@ import Testing
 @testable import Monarca
 
 @Suite("BskyFirehose client builder")
-struct BuilerTests {
+struct BuilderTests {
 	@Test("", .tags(.builder))
 	func testDefaultBuilding() async throws {
 		await #expect(throws: BskyFirehoseError.invalidConnectionParameters) {
@@ -159,8 +159,9 @@ struct BuilerTests {
 	@Test("", .tags(.builder))
 	func testClientMessageManager() async throws  {
 		let mockMessageManager = MockMessageManager()
+		var builder = DefaultFirehoseClientBuilder()
 		
-		let firehoseClient = try await DefaultFirehoseClientBuilder()
+		let firehoseClient = try await builder
 			.withHost(.usaEast1)
 			.withMessageManager(mockMessageManager)
 			.build()
@@ -168,9 +169,9 @@ struct BuilerTests {
 	
 	@Test("", .tags(.builder))
 	func testBuilderReset() async throws  {
-		let builder = DefaultFirehoseClientBuilder()
+		var builder = DefaultFirehoseClientBuilder()
 		
-		var firehoseClient = try await builder
+		var firehoseClient  = try await builder
 			.withHost(.usaEast1)
 			.withCollections([ "a", "b", "c" ])
 			.withDecentralizedIdentifiers(Constants.customIdentifierList)
@@ -180,7 +181,6 @@ struct BuilerTests {
 			.withPlayback(.seconds(5))
 			.build()
 			
-		
 		#expect(await firehoseClient.settings.host != nil)
 		#expect(await firehoseClient.settings.collections != nil)
 		#expect(await firehoseClient.settings.decentralizedIdentifiers != nil)
@@ -189,7 +189,7 @@ struct BuilerTests {
 		#expect(await firehoseClient.settings.maximumMessageSize != nil)
 		#expect(await firehoseClient.settings.playback != nil)
 		
-		builder.reset()
+		await builder.reset()
 		
 		firehoseClient = try await builder
 			.withHost(.usaEast1)
@@ -255,17 +255,5 @@ fileprivate enum Constants {
 			Playback.seconds(15),
 			Playback.minutes(3)
 		]
-	}
-}
-
-extension BuilerTests {
-	struct MockMessageManager: BskyMessageManager {
-		func processMessage(content data: Data) throws -> BskyMessage {
-			.commit
-		}
-		
-		func processMessage(string value: String) throws -> BskyMessage {
-			.commit
-		}
 	}
 }

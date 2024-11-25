@@ -34,3 +34,18 @@ extension Playback: Equatable {
 		lhs.timeValue == rhs
 	}
 }
+
+extension Playback: CustomStringConvertible {
+	public var description: String {
+		switch self {
+			case .now:
+				return "Right now (no playback)."
+			case .milliseconds(let value):
+				return "\(value)ms"
+			case .seconds(let value):
+				return "\(value)s"
+			case .minutes(let value):
+				return "\(value)m"
+		}
+	}
+}

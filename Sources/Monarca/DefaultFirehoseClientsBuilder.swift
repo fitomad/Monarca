@@ -7,71 +7,67 @@
 
 import Foundation
 
-public final class DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
-	private var settings = BskyFirehoseSettings()
-	private var messageManager: any BskyMessageManager
+public struct DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
+	private let settings: BskyFirehoseSettings
 	
 	public init() {
 		settings = BskyFirehoseSettings()
-		messageManager = AllMessagesManager()
 	}
     
-	public func withHost(_ server: FireshoseHost) -> Self {
-		settings.host = server
+	public func withHost(_ server: FireshoseHost) async -> Self {
+		await settings.set(host: server)
         return self
     }
     
-    public func withCollections(_ collection: [String]) -> Self {
-        settings.collections = collection
+    public func withCollections(_ collection: [String]) async -> Self {
+		await settings.set(collections: collection)
         return self
     }
     
-    public func withDecentralizedIdentifiers(_ identifiers: [String]) -> Self {
-        settings.decentralizedIdentifiers = identifiers
+    public func withDecentralizedIdentifiers(_ identifiers: [String]) async -> Self {
+		await settings.set(decentralizedIdentifiers: identifiers)
         return self
     }
     
-    public func withMaximumMessageSize(_ size: MessageSize) -> Self {
-        settings.maximumMessageSize = size
+    public func withMaximumMessageSize(_ size: MessageSize) async -> Self {
+		await settings.set(maximumMessageSize: size)
         return self
     }
     
-    public func withPlayback(_ playback: Playback) -> Self {
-        settings.playback = playback
+    public func withPlayback(_ playback: Playback) async -> Self {
+		await settings.set(playback: playback)
         return self
     }
     
-    public func withCompressionEnabled(_ value: Bool) -> Self {
-        settings.isCompressionEnabled = value
+    public func withCompressionEnabled(_ value: Bool) async -> Self {
+		await settings.set(isCompressionEnabled: value)
         return self
     }
     
-    public func withHelloExecution(_ value: Bool) -> Self {
-        settings.isHelloRequired = value
+    public func withHelloExecution(_ value: Bool) async -> Self {
+		await settings.set(isHelloRequired: value)
         return self
     }
 	
-	public func withMessageManager(_ messageManager: any BskyMessageManager) -> Self {
-		self.messageManager = messageManager
-		return self
-	}
+	  public func withMessageManager(_ messageManager: any BskyMessageManager) async -> Self {
+		    await settings.set(messageManager: messageManager)
+		    return self
+	  }
     
-    public func reset() {
-        settings = BskyFirehoseSettings()
-		messageManager = AllMessagesManager()
+    public mutating func reset() async {
+		await settings.reset()
     }
     
-	public func build() async throws(BskyFirehoseError) -> BskyFirehoseClient {
-		guard let _ = settings.host else {
+	 public func build() async throws(BskyFirehoseError) -> sending BskyFirehoseClient {
+		guard let _ = await settings.host else {
 			throw BskyFirehoseError.invalidConnectionParameters
 		}
 		
-		let client = BskyFirehoseClient(settings: settings)
-		
-		Task { @MainActor in
-			await client.manageMessages(using: messageManager)
+		if await settings.messageManager == nil {
+			await settings.set(messageManager: AllMessagesManager())
 		}
 		
+		let client = BskyFirehoseClient(settings: settings)
 		
 		return client
     }

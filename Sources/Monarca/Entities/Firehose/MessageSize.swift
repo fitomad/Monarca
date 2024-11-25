@@ -32,3 +32,18 @@ extension MessageSize: Equatable {
 		lhs.value == rhs
 	}
 }
+
+extension MessageSize: CustomStringConvertible {
+	public var description: String {
+		switch self {
+			case .unlimited:
+				return "Unlimited message size"
+			case .bytes(let value):
+				return "\(value) bytes"
+			case .kilobytes(let value):
+				return "\(value) KB"
+			case .megabytes(let value):
+				return "\(value) MB"
+		}
+	}
+}

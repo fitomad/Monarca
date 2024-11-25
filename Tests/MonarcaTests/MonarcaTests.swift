@@ -3,46 +3,35 @@ import Testing
 
 @Suite("Client tests. Conecction and message processing.")
 struct MonarcaTests {
-	@Test("Open and close connection to BlueSky Jetstream", .tags(.client))
+	@Test("Connect and close Jetstream connection", .tags(.client))
 	func testClientConnectionAndCloseConnection() async throws {
-		let bskyClient = BskyFirehoseClient(settings: .defaultEastCoast)
+		let bskyClient = try await DefaultFirehoseClientBuilder()
+			.withHost(.usaEast1)
+			.withMessageManager(MockMessageManager())
+			.build()
 		
-		let openTask = Task {
-			try await bskyClient.start()
-			#expect(await bskyClient.isConnected)
-		}
-		
-		await openTask.result
-		
-		let closeTask = Task {
-			await bskyClient.stop()
-			#expect(await bskyClient.isConnected == false)
-		}
-		
-		await closeTask.result
-	}
-	
-	@Test("Receive a message", .tags(.client))
-	func testMessageReceived() async throws {
-		let bskyClient = BskyFirehoseClient(settings: .defaultEastCoast)
-		
-		let openTask = Task {
-			try await bskyClient.start()
-			#expect(await bskyClient.isConnected)
-		}
-		
-		await openTask.result
-		
-		let messageTask = Task {
-			await bskyClient.onMessageReceived { message in
-				print(message)
-				#expect(true)
-			}
-		}
-		
-		await messageTask.result
+		try await bskyClient.start()
+		#expect(await bskyClient.isConnected)
 		
 		await bskyClient.stop()
+		#expect(await bskyClient.isConnected == false)
+	}
+	
+	@Test("Receive a message from the BlueSky Jetstream", .tags(.client))
+	func testClientMessageReceived() async throws {
+		let bskyClient = try await DefaultFirehoseClientBuilder()
+			.withHost(.usaEast1)
+			.withMessageManager(MockMessageManager())
+			.build()
+		
+		await bskyClient.onMessageReceived { message in
+			print(message)
+			#expect(true)
+		}
+		
+		try await bskyClient.start()
+		#expect(await bskyClient.isConnected)
+		await bskyClient.receive()
 	}
 }
 
