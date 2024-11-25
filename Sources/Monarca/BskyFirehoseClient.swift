@@ -36,7 +36,7 @@ public actor BskyFirehoseClient: Sendable {
 		status = .closed
 	}
 	
-	public func reveive() {
+	public func receive() {
 		Task {
 			try await processIncomingMessage()
 		}
