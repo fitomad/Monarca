@@ -10,7 +10,7 @@ import Foundation
 extension Record {
 	public struct Post: Codable, Sendable {
 		public let createdAt: Date
-		public let languages: [String]
+		public let languages: [String]?
 		public let text: String
 		public let embeddedContent: Record.Post.Embedded?
 		public let facets: [Record.Post.Facet]?
@@ -39,7 +39,7 @@ extension Record.Post {
 	public struct PostImage: Codable, Sendable {
 		public let alternateText: String?
 		public let image: Record.Image
-		public let aspectRatio: Record.AspectRatio
+		public let aspectRatio: Record.AspectRatio?
 		
 		private enum CodingKeys: String, CodingKey {
 			case alternateText = "alt"

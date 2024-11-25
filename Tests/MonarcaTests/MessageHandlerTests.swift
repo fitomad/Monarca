@@ -190,15 +190,52 @@ struct MessageHandlerTests {
 				
 				#expect(content.embeddedContent != nil)
 				#expect(content.embeddedContent!.images != nil)
-				#expect(content.embeddedContent!.images!.first!.aspectRatio.height == 1124)
+				#expect(content.embeddedContent!.images!.first!.aspectRatio!.height == 1124)
 				#expect(content.embeddedContent!.images!.first!.image.bskyURL == "bafkreidktxpsxzwrbsrzajhsdhiw6dz6ie4vek7ts4bfzcagau6sp7h4ju")
 				
-				#expect(content.languages.count == 1)
-				#expect(content.languages.contains("en"))
+				#expect(content.languages != nil)
+				#expect(content.languages!.count == 1)
+				#expect(content.languages!.contains("en"))
 				
 				#expect(content.reply != nil)
 				#expect(content.reply!.parent.bskyURL == "at://did:plc:sgk54ktvedr4ultdws5nenbv/app.bsky.feed.post/3lbetphzb362u")
 				#expect(content.reply!.root.contentIdentifier == "bafyreiaqg5qpb34om3xlwfeyotabuu4bbbf6pp33g6j4bz7fndyj65gpk4")
+			} else {
+				throw MessageHandlerTestsError.contentNotAvailable
+			}
+		} else {
+			throw MessageHandlerTestsError.contentNotAvailable
+		}
+	}
+	
+	@Test("Commit // Post (With Images, Reply and Facets)", .tags(.messageHandler))
+	func testCommitPostWithFacetsDecoding() async throws {
+		guard let data = MockMessages.commitPostWithFacet.data(using: .utf8) else {
+			throw MessageHandlerTestsError.invalidJSON
+		}
+		
+		let handler = CommitMessageHandler()
+		let message = try await handler.processMessage(content: data, using: jsonDecoder)
+		
+		if case let .commit(postMessage) = message {
+			#expect(postMessage.did == "did:plc:4imeuitzy2wizyngczhdguzn")
+			#expect(postMessage.payload.relatedKey == "3lbsi7n2vdm2x")
+			#expect(postMessage.payload.record != nil)
+			
+			if case let .post(content) = postMessage.payload.record! {
+				#expect(content.text.isEmpty == false)
+				
+				#expect(content.embeddedContent != nil)
+				#expect(content.embeddedContent!.images != nil)
+				#expect(content.embeddedContent!.images!.first!.image.bskyURL == "bafkreie6n2bri6mougcmvf6awcxdmhbhbi7sac65pfifc3rwvu24rzjlii")
+				
+				#expect(content.languages == nil)
+				
+				#expect(content.reply != nil)
+				#expect(content.reply!.parent.bskyURL == "at://did:plc:4imeuitzy2wizyngczhdguzn/app.bsky.feed.post/3lbsi7hdoji2u")
+				#expect(content.reply!.root.contentIdentifier == "bafyreiha6xpo57xnui667gm5aqtrzwk672mvtbhcdkr2wt3nlelir5yf74")
+				
+				dump(content.facets)
 			} else {
 				throw MessageHandlerTestsError.contentNotAvailable
 			}

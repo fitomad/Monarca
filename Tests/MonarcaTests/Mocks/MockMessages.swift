@@ -218,6 +218,76 @@ enum MockMessages {
 		"""
 	}
 	
+	static var commitPostWithFacet: String {
+		"""
+		{
+		"did": "did:plc:4imeuitzy2wizyngczhdguzn",
+		"time_us": 1732570668538243,
+		"kind": "commit",
+		"commit": {
+		  "rev": "3lbsi7n2zam2x",
+		  "operation": "create",
+		  "collection": "app.bsky.feed.post",
+		  "rkey": "3lbsi7n2vdm2x",
+		  "record": {
+			"$type": "app.bsky.feed.post",
+			"createdAt": "2020-12-27T08:31:25.000Z",
+			"embed": {
+			  "$type": "app.bsky.embed.images",
+			  "images": [
+				{
+				  "alt": "",
+				  "image": {
+					"$type": "blob",
+					"ref": {
+					  "$link": "bafkreie6n2bri6mougcmvf6awcxdmhbhbi7sac65pfifc3rwvu24rzjlii"
+					},
+					"mimeType": "image/jpeg",
+					"size": 87197
+				  }
+				},
+				{
+				  "alt": "",
+				  "image": {
+					"$type": "blob",
+					"ref": {
+					  "$link": "bafkreifie45m3rycjzlhkusud46kkjajndcklodrx6gakl35r4rjbl7bnm"
+					},
+					"mimeType": "image/jpeg",
+					"size": 93603
+				  }
+				}
+			  ]
+			},
+			"facets": [
+			  {
+				"features": [
+				  {
+					"$type": "app.bsky.richtext.facet#link",
+					"uri": "https://www.coronawarn.app/en/faq/#backup"
+				  }
+				],
+				"index": { "byteEnd": 208, "byteStart": 167 }
+			  }
+			],
+			"reply": {
+			  "parent": {
+				"cid": "bafyreid2ljtfkna2l7n4yepajxfz4faoqnayqziy3yqeaxzwl5fq2dscxu",
+				"uri": "at://did:plc:4imeuitzy2wizyngczhdguzn/app.bsky.feed.post/3lbsi7hdoji2u"
+			  },
+			  "root": {
+				"cid": "bafyreiha6xpo57xnui667gm5aqtrzwk672mvtbhcdkr2wt3nlelir5yf74",
+				"uri": "at://did:plc:4imeuitzy2wizyngczhdguzn/app.bsky.feed.post/3lbo6yr2wsl2m"
+			  }
+			},
+			"text": "Die FAQ der Corona-Warn-App empfiehlt beim Smartphone-Wechsel übrigens, das alte Smartphone noch 14 Tage lang parallel weiterzuverwenden und regelmäßig zu checken: https://www.coronawarn.app/en/faq/#backup"
+		  },
+		  "cid": "bafyreiai3a6tihe5tuoafk2t7ru5heuz2trypcuogd7j4qtqylary5idku"
+		}
+		}
+		"""
+	}
+	
 	static var identity: String {
 		"""
 		{
