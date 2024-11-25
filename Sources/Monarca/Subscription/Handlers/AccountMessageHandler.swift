@@ -12,7 +12,7 @@ actor AccountMessageHandler: Sendable {
 }
 
 extension AccountMessageHandler: BskyMessageHandler {
-	func setNextHandler(_ handler: any BskyMessageHandler) async {
+	func setNextHandler(_ handler: any BskyMessageHandler) {
 		self.nextHandler = handler
 	}
 	

@@ -38,8 +38,7 @@ actor AllMessagesManager: BskyMessageManager {
         }
         
         do {
-			let incomingMessage = try await firstHandler.processMessage(content: data, using: jsonDecoder)
-			return incomingMessage
+			return try await firstHandler.processMessage(content: data, using: jsonDecoder)
         } catch {
             throw BskyMessageManagerError.unprocessable(message: data)
         }
