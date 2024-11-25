@@ -13,7 +13,8 @@ actor AllMessagesManager: BskyMessageManager {
     
     init() async {
         handlersChain = [
-            IdentityMessageHandler()
+            IdentityMessageHandler(),
+			AccountMessageHandler()
         ]
         
         jsonDecoder.dateDecodingStrategy = .iso8601WithFractionalSeconds

@@ -9,10 +9,6 @@ import Foundation
 
 actor IdentityMessageHandler: Sendable {
 	private(set) var nextHandler: (any BskyMessageHandler)?
-    
-    init(nextHandler: (any BskyMessageHandler)? = nil) {
-        self.nextHandler = nextHandler
-    }
 }
 
 extension IdentityMessageHandler: BskyMessageHandler {
@@ -24,7 +20,7 @@ extension IdentityMessageHandler: BskyMessageHandler {
         do {
             let identityMessage = try decoder.decode(BskyMessage.Identity.self, from: data)
             print("✅ \(identityMessage)")
-            return .identity(message: identityMessage)
+            return .identity(payload: identityMessage)
         } catch {
             guard let nextHandler else {
                 throw BskyMessageManagerError.unprocessable(message: data)
