@@ -49,16 +49,16 @@ public struct DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
         return self
     }
 	
-	public func withMessageManager(_ messageManager: any BskyMessageManager) async -> Self {
-		await settings.set(messageManager: messageManager)
-		return self
-	}
+	  public func withMessageManager(_ messageManager: any BskyMessageManager) async -> Self {
+		    await settings.set(messageManager: messageManager)
+		    return self
+	  }
     
     public mutating func reset() async {
 		await settings.reset()
     }
     
-	public func build() async throws(BskyFirehoseError) -> sending BskyFirehoseClient {
+	 public func build() async throws(BskyFirehoseError) -> sending BskyFirehoseClient {
 		guard let _ = await settings.host else {
 			throw BskyFirehoseError.invalidConnectionParameters
 		}

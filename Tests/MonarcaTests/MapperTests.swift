@@ -78,7 +78,7 @@ struct MapperTests {
 		
 		let regex = try Regex(Constants.fullParameterRegEx)
 		let match = try regex.firstMatch(in: url.absoluteString)
-			
+    
 		#expect(match != nil)
 	}
 }
