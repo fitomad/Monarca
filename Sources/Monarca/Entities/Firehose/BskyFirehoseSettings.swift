@@ -80,3 +80,43 @@ extension BskyFirehoseSettings {
 		}
 	}
 }
+
+extension BskyFirehoseSettings: @preconcurrency CustomStringConvertible {
+	public var description: String {
+		var settingsContent = [String]()
+		
+		if let host {
+			settingsContent.append("Host: \(host.endpoint)")
+		}
+		
+		if let collections {
+			settingsContent.append("Collections: \(collections.joined(separator: ", "))")
+		}
+		
+		if let decentralizedIdentifiers {
+			settingsContent.append("Decentralized IDs: \(decentralizedIdentifiers.joined(separator: ", "))")
+		}
+		
+		if let maximumMessageSize {
+			settingsContent.append("Maximum Message Size: \(maximumMessageSize.description)")
+		}
+		
+		if let playback {
+			settingsContent.append("Playback: \(playback.description)")
+		}
+		
+		if let isCompressionEnabled {
+			settingsContent.append("Compression enabled: \(isCompressionEnabled)")
+		}
+		
+		if let isHelloRequired {
+			settingsContent.append("Hello command: \(isHelloRequired)")
+		}
+		
+		if settingsContent.isEmpty {
+			return "⚠️ No settings provided."
+		}
+		
+		return settingsContent.joined(separator: "\n")
+	}
+}

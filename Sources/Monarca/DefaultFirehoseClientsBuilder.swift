@@ -14,7 +14,6 @@ public struct DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 		settings = BskyFirehoseSettings()
 	}
     
-
 	public func withHost(_ server: FireshoseHost) async -> Self {
 		await settings.set(host: server)
         return self
@@ -62,6 +61,10 @@ public struct DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 	public func build() async throws(BskyFirehoseError) -> sending BskyFirehoseClient {
 		guard let _ = await settings.host else {
 			throw BskyFirehoseError.invalidConnectionParameters
+		}
+		
+		if await settings.messageManager == nil {
+			await settings.set(messageManager: AllMessagesManager())
 		}
 		
 		let client = BskyFirehoseClient(settings: settings)
