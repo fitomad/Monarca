@@ -31,7 +31,7 @@ struct MonarcaTests {
 		
 		try await bskyClient.start()
 		#expect(await bskyClient.isConnected)
-		await bskyClient.reveive()
+		await bskyClient.receive()
 	}
 }
 
