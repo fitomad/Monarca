@@ -8,8 +8,8 @@
 import Foundation
 
 extension Record {
-	public struct Reference: Codable, Sendable {
-		public let atProtocolLink: String
+	struct Reference: Codable, Sendable {
+		let atProtocolLink: String
 		
 		private enum CodingKeys: String, CodingKey {
 			case atProtocolLink = "$link"

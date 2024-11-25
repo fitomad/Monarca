@@ -33,7 +33,7 @@ struct MessageHandlerTests {
 			#expect(likeMessage.payload.record != nil)
 			
 			if case let .like(content) = likeMessage.payload.record! {
-				#expect(content.subject.cid == "bafyreidc6sydkkbchcyg62v77wbhzvb2mvytlmsychqgwf2xojjtirmzj4")
+				#expect(content.subject.contentIdentifier == "bafyreidc6sydkkbchcyg62v77wbhzvb2mvytlmsychqgwf2xojjtirmzj4")
 			} else {
 				throw MessageHandlerTestsError.contentNotAvailable
 			}
@@ -57,7 +57,7 @@ struct MessageHandlerTests {
 			#expect(repostMessage.payload.record != nil)
 			
 			if case let .repost(content) = repostMessage.payload.record! {
-				#expect(content.subject.cid == "bafyreig34fxgp2zg7q7xdffxlkhkmivs4nb4hs4xawjsvmnwuczdhzll5e")
+				#expect(content.subject.contentIdentifier == "bafyreig34fxgp2zg7q7xdffxlkhkmivs4nb4hs4xawjsvmnwuczdhzll5e")
 			} else {
 				throw MessageHandlerTestsError.contentNotAvailable
 			}
@@ -191,7 +191,7 @@ struct MessageHandlerTests {
 				#expect(content.embeddedContent != nil)
 				#expect(content.embeddedContent!.images != nil)
 				#expect(content.embeddedContent!.images!.first!.aspectRatio.height == 1124)
-				#expect(content.embeddedContent!.images!.first!.image.location.atProtocolLink == "bafkreidktxpsxzwrbsrzajhsdhiw6dz6ie4vek7ts4bfzcagau6sp7h4ju")
+				#expect(content.embeddedContent!.images!.first!.image.bskyURL == "bafkreidktxpsxzwrbsrzajhsdhiw6dz6ie4vek7ts4bfzcagau6sp7h4ju")
 				
 				#expect(content.languages.count == 1)
 				#expect(content.languages.contains("en"))

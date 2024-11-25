@@ -13,6 +13,7 @@ extension Record {
 		public let languages: [String]
 		public let text: String
 		public let embeddedContent: Record.Post.Embedded?
+		public let facets: [Record.Post.Facet]?
 		public let reply: Record.Post.Reply?
 		
 		private enum CodingKeys: String, CodingKey {
@@ -20,6 +21,7 @@ extension Record {
 			case languages = "langs"
 			case text
 			case embeddedContent = "embed"
+			case facets
 			case reply
 		}
 	}
@@ -49,5 +51,57 @@ extension Record.Post {
 	public struct Reply: Codable, Sendable {
 		public let parent: Record.LinkedIdentifier
 		public let root: Record.LinkedIdentifier
+	}
+	
+	public struct Facet: Codable, Sendable {
+		public let features: [Record.Post.Facet.Feature]
+		public let index: Record.Post.Facet.Index
+		
+		private enum CodingKeys: String, CodingKey {
+			case features
+			case index
+		}
+		
+		public init(from decoder: Decoder) throws {
+			let values = try decoder.container(keyedBy: CodingKeys.self)
+			
+			features = try values.decode([Record.Post.Facet.Feature].self, forKey: .features)
+			index = try values.decode(Record.Post.Facet.Index.self, forKey: .index)
+		}
+	}
+}
+
+extension Record.Post.Facet {
+	public struct Index: Codable, Sendable {
+		let startIndex: Int
+		let endIndex: Int
+		
+		private enum CodingKeys: String, CodingKey {
+			case startIndex = "byteStart"
+			case endIndex = "byteEnd"
+		}
+	}
+	
+	public enum Feature: Codable, Sendable {
+		case link(_ value: String)
+		case tag(_ value: String)
+		case unknown
+		
+		private enum CodingKeys: String, CodingKey {
+			case link = "uri"
+			case tag
+		}
+		
+		public init(from decoder: Decoder) throws {
+			let values = try decoder.container(keyedBy: CodingKeys.self)
+			
+			if let link = try? values.decode(String.self, forKey: .link) {
+				self = .link(link)
+			} else if let tag = try? values.decode(String.self, forKey: .tag) {
+				self = .tag(tag)
+			} else {
+				self = .unknown
+			}
+		}
 	}
 }
