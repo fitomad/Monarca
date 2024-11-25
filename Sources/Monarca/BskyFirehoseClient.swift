@@ -1,7 +1,7 @@
 import Foundation
 
 public typealias MessageReceivedClosure = (BskyMessage) -> Void
-public typealias ErrorReceivedClosure = (any Error) -> Void
+public typealias ErrorReceivedClosure = (BskyFirehoseError) -> Void
 
 public actor BskyFirehoseClient: Sendable {
 	private var onMessageReceived: MessageReceivedClosure?
@@ -73,8 +73,8 @@ public actor BskyFirehoseClient: Sendable {
 				if let onMessageReceived, let incomingMessage {
 					onMessageReceived(incomingMessage)
 				}
-			} catch let error {
-				onErrorProcessingMessage?(error)
+			} catch {
+				onErrorProcessingMessage?(.invalidMessage(content: message))
 			}
 		}
 		

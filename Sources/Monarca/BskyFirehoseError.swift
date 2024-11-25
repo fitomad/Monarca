@@ -12,4 +12,5 @@ public enum BskyFirehoseError: Error {
 	case invalidConnectionParameters
 	case invalidData
 	case messageManagerNotAvailable
+	case invalidMessage(content: URLSessionWebSocketTask.Message)
 }
