@@ -49,28 +49,47 @@ extension BskyMessage.Commit {
 			
 			switch collection {
 				case .repost:
-					let data = try values.decode(Record.Repost.self, forKey: .record)
-					record = .repost(payload: data)
+					if let data = try? values.decode(Record.Repost.self, forKey: .record) {
+						record = .repost(payload: data)
+					} else {
+						record = nil
+					}
 				case .follow:
-					let data = try values.decode(Record.Follow.self, forKey: .record)
-					record = .follow(payload: data)
+					if let data = try? values.decode(Record.Follow.self, forKey: .record) {
+						record = .follow(payload: data)
+					} else {
+						record = nil
+					}
 				case .like:
-					let data = try values.decode(Record.Like.self, forKey: .record)
-					record = .like(payload: data)
+					if let data = try? values.decode(Record.Like.self, forKey: .record) {
+						record = .like(payload: data)
+					} else {
+						record = nil
+					}
 				case .listItem:
-					let data = try values.decode(Record.ListItem.self, forKey: .record)
-					record = .listItem(payload: data)
+					if let data = try? values.decode(Record.ListItem.self, forKey: .record) {
+						record = .listItem(payload: data)
+					} else {
+						record = nil
+					}
 				case .block:
-					let data = try values.decode(Record.Block.self, forKey: .record)
-					record = .block(payload: data)
+					if let data = try? values.decode(Record.Block.self, forKey: .record) {
+						record = .block(payload: data)
+					} else {
+						record = nil
+					}
 				case .profile:
-					let data = try values.decode(Record.Profile.self, forKey: .record)
-					record = .profile(payload: data)
+					if let data = try? values.decode(Record.Profile.self, forKey: .record) {
+						record = .profile(payload: data)
+					} else {
+						record = nil
+					}
 				case .post:
-					let data = try values.decode(Record.Post.self, forKey: .record)
-					record = .post(payload: data)
-				default:
-					throw BskyMessageManagerError.notRecognized
+					if let data = try? values.decode(Record.Post.self, forKey: .record) {
+						record = .post(payload: data)
+					} else {
+						record = nil
+					}
 			}
 		}
 	}

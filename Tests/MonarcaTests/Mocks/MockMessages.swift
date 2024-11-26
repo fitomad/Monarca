@@ -288,6 +288,22 @@ enum MockMessages {
 		"""
 	}
 	
+	static var commitDeleted: String {
+		"""
+		{
+			"did":"did:plc:k74amn5fp3ap7dmaceolhpyi",
+			"time_us":1732571416879146,
+			"kind":"commit",
+			"commit":{
+				"rev":"3lbsivxh5kg2x",
+				"operation":"delete",
+				"collection":"app.bsky.graph.follow",
+				"rkey":"3lawjozzktt2s"
+			}
+		}
+		"""
+	}
+	
 	static var identity: String {
 		"""
 		{

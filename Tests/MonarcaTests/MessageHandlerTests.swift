@@ -18,6 +18,24 @@ struct MessageHandlerTests {
 		return jsonDecoder
 	}
 	
+	@Test("Commit // Delete operation", .tags(.messageHandler))
+	func testCommiDeletedDecoding() async throws {
+		guard let data = MockMessages.commitDeleted.data(using: .utf8) else {
+			throw MessageHandlerTestsError.invalidJSON
+		}
+		
+		let handler = CommitMessageHandler()
+		let message = try await handler.processMessage(content: data, using: jsonDecoder)
+		
+		if case let .commit(deletedMessage) = message {
+			#expect(deletedMessage.did == "did:plc:k74amn5fp3ap7dmaceolhpyi")
+			#expect(deletedMessage.payload.relatedKey == "3lawjozzktt2s")
+			#expect(deletedMessage.payload.record == nil)
+		} else {
+			throw MessageHandlerTestsError.contentNotAvailable
+		}
+	}
+	
 	@Test("Commit // Like", .tags(.messageHandler))
 	func testCommitLikeDecoding() async throws {
 		guard let data = MockMessages.commitLike.data(using: .utf8) else {
