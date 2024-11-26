@@ -21,8 +21,6 @@ extension CommitMessageHandler: BskyMessageHandler {
 			let commitMessage = try decoder.decode(BskyMessage.Commit.self, from: data)
 			return .commit(payload: commitMessage)
 		} catch let error {
-			print("🚨 Commit\n\(String(data: data, encoding: .utf8) ?? "No data")")
-			
 			guard let nextHandler else {
 				throw BskyMessageManagerError.unprocessable(message: data)
 			}
