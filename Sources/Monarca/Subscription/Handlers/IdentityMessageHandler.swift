@@ -19,7 +19,6 @@ extension IdentityMessageHandler: BskyMessageHandler {
     func processMessage(content data: Data, using decoder: JSONDecoder) async throws -> BskyMessage {
         do {
             let identityMessage = try decoder.decode(BskyMessage.Identity.self, from: data)
-            print("✅ \(identityMessage)")
             return .identity(payload: identityMessage)
         } catch {
             guard let nextHandler else {

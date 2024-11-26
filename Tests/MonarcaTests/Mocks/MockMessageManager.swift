@@ -6,14 +6,14 @@
 //
 
 import Foundation
-import Monarca
+@testable import Monarca
 
 struct MockMessageManager: BskyMessageManager {
 	func processMessage(content data: Data) throws -> BskyMessage {
-		.commit
+		throw BskyMessageManagerError.nonValidMessage
 	}
 	
 	func processMessage(string value: String) throws -> BskyMessage {
-		.commit
+		throw BskyMessageManagerError.nonValidMessage
 	}
 }
