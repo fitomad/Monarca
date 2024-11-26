@@ -15,5 +15,5 @@ public enum Collection: String, Codable, Sendable {
 	case profile = "app.bsky.actor.profile"
 	case block = "app.bsky.graph.block"
 	case post = "app.bsky.feed.post"
-	
+	case starterPack = "app.bsky.graph.starterpack"
 }

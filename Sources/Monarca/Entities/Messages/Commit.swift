@@ -45,52 +45,51 @@ extension BskyMessage.Commit {
 			cid = try? values.decode(String.self, forKey: .cid)
 			operation = try values.decode(BskyMessage.Commit.Operation.self, forKey: .operation)
 			relatedKey = try values.decode(String.self, forKey: .relatedKey)
-			collection = try values.decode(Collection.self, forKey: .collection)
 			
-			switch collection {
-				case .repost:
-					if let data = try? values.decode(Record.Repost.self, forKey: .record) {
-						record = .repost(payload: data)
-					} else {
-						record = nil
-					}
-				case .follow:
-					if let data = try? values.decode(Record.Follow.self, forKey: .record) {
-						record = .follow(payload: data)
-					} else {
-						record = nil
-					}
-				case .like:
-					if let data = try? values.decode(Record.Like.self, forKey: .record) {
-						record = .like(payload: data)
-					} else {
-						record = nil
-					}
-				case .listItem:
-					if let data = try? values.decode(Record.ListItem.self, forKey: .record) {
-						record = .listItem(payload: data)
-					} else {
-						record = nil
-					}
-				case .block:
-					if let data = try? values.decode(Record.Block.self, forKey: .record) {
-						record = .block(payload: data)
-					} else {
-						record = nil
-					}
-				case .profile:
-					if let data = try? values.decode(Record.Profile.self, forKey: .record) {
-						record = .profile(payload: data)
-					} else {
-						record = nil
-					}
-				case .post:
-					if let data = try? values.decode(Record.Post.self, forKey: .record) {
-						record = .post(payload: data)
-					} else {
-						record = nil
-					}
+			var decodedRecord: Record? = nil
+			
+			do {
+				collection = try values.decode(Collection.self, forKey: .collection)
+				
+				switch collection {
+					case .repost:
+						if let data = try? values.decode(Record.Repost.self, forKey: .record) {
+							decodedRecord = .repost(payload: data)
+						}
+					case .follow:
+						if let data = try? values.decode(Record.Follow.self, forKey: .record) {
+							decodedRecord = .follow(payload: data)
+						}
+					case .like:
+						if let data = try? values.decode(Record.Like.self, forKey: .record) {
+							decodedRecord = .like(payload: data)
+						}
+					case .listItem:
+						if let data = try? values.decode(Record.ListItem.self, forKey: .record) {
+							decodedRecord = .listItem(payload: data)
+						}
+					case .block:
+						if let data = try? values.decode(Record.Block.self, forKey: .record) {
+							decodedRecord = .block(payload: data)
+						}
+					case .profile:
+						if let data = try? values.decode(Record.Profile.self, forKey: .record) {
+							decodedRecord = .profile(payload: data)
+						}
+					case .post:
+						if let data = try? values.decode(Record.Post.self, forKey: .record) {
+							decodedRecord = .post(payload: data)
+						}
+					case .starterPack:
+						if let data = try? values.decode(Record.StarterPack.self, forKey: .record) {
+							decodedRecord = .starterPack(payload: data)
+						}
+				}
+			} catch {
+				throw BskyMessageManagerError.nonValidMessage
 			}
+			
+			self.record = decodedRecord
 		}
 	}
 	
