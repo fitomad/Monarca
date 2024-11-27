@@ -6,8 +6,9 @@ Monarca is a Swift project designed to consume the BlueSky Firehose using the [J
 
 - **Real-time Data Streaming**: Seamlessly consumes BlueSky Firehose streams via Jetstream.
 - **Swift Integration**: Built with Swift, ensuring a fast and native experience.
+- **Swift 6 Concurrency**: Adopts the new Swift concurrency model.
 - **Lightweight and Efficient**: Optimized for performance and low latency.
-- **Supported collection`**:
+- **Supported collection`**: Custom types for the following `Commit` type messages 
 	- `app.bsky.feed.like`
 	- `app.bsky.graph.follow`
 	- `app.bsky.graph.listitem`
@@ -24,6 +25,21 @@ Monarca is a Swift project designed to consume the BlueSky Firehose using the [J
 
 ## Installation
 
+Monarca is distributed using Swift Package Manager so you can include easily in your Swift Packages or Xcode projects.
+
+## Adding package dependency
+
+Include the following line in the `dependencies` section of your *Package.swift* file
+
+```swift
+...
+dependencies: [
+	// 🦋 Monarca framework
+	.package(url: "https://github.com/fitomad/monarca.git", from: "1.0")
+]
+...
+```
+
 ## Usage
 
 1. Import Monarca into your Swift project:
@@ -33,8 +49,18 @@ import Monarca
 ```
 2. Initialize the Firehose client:
 
-```swift
+Monarca use a [Builder pattern] to configure and create the Jetstream connection 
 
+```swift
+let bskyFirehoseClient = try await DefaultFirehoseClientBuilder()
+	.withHost(.usaEast1)
+	.withCollections([ "a", "b", "c" ])
+	.withDecentralizedIdentifiers(Constants.customIdentifierList)
+	.withCompressionEnabled(false)
+	.withHelloExecution(false)
+	.withMaximumMessageSize(.kilobytes(value: 2048))
+	.withPlayback(.seconds(5))
+	.build()
 ```
 
 ## License
@@ -50,6 +76,20 @@ Monarca is licensed under the MIT License. See LICENSE for details.
 
 ### 1.0
 
+Bluesky Firehose connection using Jetstreams.
+
+Custom types for the following messages
+
+- Account
+- Identity
+- Commit
+	- `app.bsky.feed.like`
+	- `app.bsky.graph.follow`
+	- `app.bsky.graph.listitem`
+	- `app.bsky.actor.profile`
+	- `app.bsky.graph.block`
+	- `app.bsky.feed.post`
+	- `app.bsky.graph.starterpack`
 
 
 ## Author
