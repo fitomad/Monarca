@@ -9,7 +9,6 @@ import Foundation
 
 enum BskyMessageManagerError: Error {
     case nonValidMessage
-    case notRecognized
     case unprocessable(message: Data)
     case unavailableHandlers
 }
