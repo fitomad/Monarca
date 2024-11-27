@@ -54,8 +54,10 @@ public actor BskyFirehoseClient: Sendable {
 			let firehoseURL = try await mapper.mapToURL(from: settings)
 			websocketTask = URLSession.shared.webSocketTask(with: firehoseURL)
 			status = .connected
-		} catch is FirehoseMapperError {
+		} catch FirehoseMapperError.malformedParameterURL {
 			throw .invalidFirehoseURL
+		} catch {
+			throw .invalidConnectionParameters
 		}
 	}
 	
@@ -74,12 +76,15 @@ public actor BskyFirehoseClient: Sendable {
 					case .string(let content):
 						incomingMessage = try await bskyMessageManager.processMessage(string: content)
 					@unknown default:
-						fatalError()
+						throw BskyMessageManagerError.nonValidMessage
 				}
 				
 				if let onMessageReceived, let incomingMessage {
 					onMessageReceived(incomingMessage)
 				}
+			} catch BskyMessageManagerError.unprocessable(let messageData) {
+				let unknownMessage = BskyMessage.unknown(message: messageData)
+				onMessageReceived?(unknownMessage)
 			} catch {
 				onErrorProcessingMessage?(.invalidMessage(content: message))
 			}
