@@ -8,7 +8,7 @@ Monarca is a Swift project designed to consume the BlueSky Firehose using the [J
 - **Swift Integration**: Built with Swift, ensuring a fast and native experience.
 - **Swift 6 Concurrency**: Adopts the new Swift concurrency model.
 - **Lightweight and Efficient**: Optimized for performance and low latency.
-- **Supported collection`**: Custom types for the following `Commit` type messages 
+- **Supported collection**: Custom types for the following `Commit` type messages 
 	- `app.bsky.feed.like`
 	- `app.bsky.graph.follow`
 	- `app.bsky.graph.listitem`
@@ -20,7 +20,7 @@ Monarca is a Swift project designed to consume the BlueSky Firehose using the [J
 ## Requirements
 
 - Swift 6.0 or later
-- macOS 13.0+
+- macOS 13.0+ || iOS 13+
 - Internet connection to access the BlueSky Jetstream service
 
 ## Installation
@@ -35,7 +35,7 @@ Include the following line in the `dependencies` section of your *Package.swift*
 ...
 dependencies: [
 	// 🦋 Monarca
-	.package(url: "https://github.com/fitomad/monarca.git", from: "1.0.0")
+	.package(url: "https://github.com/fitomad/monarca.git", from: "0.1.0")
 ]
 ...
 ```
@@ -47,6 +47,7 @@ dependencies: [
 ```swift
 import Monarca
 ```
+
 2. Initialize the Firehose client:
 
 Monarca use a [Builder pattern](https://refactoring.guru/design-patterns/builder) to configure and create the Jetstream connection. 
@@ -99,7 +100,10 @@ await bskyFirehoseClient.onMessageReceived { message in
 }
 ```
 
-Error management
+## Error management
+
+You can capture and manage errors from the Jetstream connection using the `onErrorProcessingMessage(:_)` that receives a `BskyFirehoseError` error type.
+
 
 ```swift
 await firehoseClient.onErrorProcessingMessage { bskyFirehoseError in
@@ -125,6 +129,8 @@ await firehoseClient.onErrorProcessingMessage { bskyFirehoseError in
 	}
 }
 ```
+
+In case you receive a *strange* message from Jetstream, you can inspect the whole websoccket response available in the `invalidMessage` error type, that has an `URLSessionWebSocketTask.Message` as associated type.
 
 ## Jetstream message parsing engine
 
