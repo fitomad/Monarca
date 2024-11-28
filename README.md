@@ -35,7 +35,7 @@ Include the following line in the `dependencies` section of your *Package.swift*
 ...
 dependencies: [
 	// 🦋 Monarca
-	.package(url: "https://github.com/fitomad/monarca.git", from: "1.0")
+	.package(url: "https://github.com/fitomad/monarca.git", from: "1.0.0")
 ]
 ...
 ```
@@ -126,6 +126,39 @@ await firehoseClient.onErrorProcessingMessage { bskyFirehoseError in
 }
 ```
 
+## Jetstream message parsing engine
+
+Apart from the parameters specific to the Jetstream connection, you can set up your own message parsing engine. By default, Monarca provides its own parsing engine, so this step is not necessary, but it's left open in case your project has special requirements.
+
+The only requirement is that your parsing engine implements the BskyMessageManager protocol, which will handle receiving messages from the WebSocket connected to Jetstream and return a BskyMessage type message.
+
+```swift
+struct MockMessageManager: BskyMessageManager {
+	func processMessage(content data: Data) throws -> BskyMessage {
+		// Do things with the message here
+	}
+	
+	func processMessage(string value: String) throws -> BskyMessage {
+		guard let data = value.data(using: .utf8) else {
+			throw MyError.strangeMessage
+		}
+		
+		return try await processMessage(content: data)
+	}
+}
+```
+
+Once you finish to develop the custom message manager component, use the `withMessageManager(_:)` function to set your custom component.
+
+```swift
+let bskyFirehoseClient = try await DefaultFirehoseClientBuilder()
+	.withHost(.usaEast1)
+	.withMessageManager(MockMessageManager)
+	.build()
+```
+
+Now you are ready to receive new messages and process them using your custom manager.
+
 ## License
 
 Monarca is licensed under the MIT License. See LICENSE for details.
@@ -137,27 +170,25 @@ Monarca is licensed under the MIT License. See LICENSE for details.
 
 ## Version history
 
-### 1.0
+### 0.1.0
 
-Bluesky Firehose connection using Jetstreams.
-
-Custom types for the following messages
-
-- Account
-- Identity
-- Commit
-	- `app.bsky.feed.like`
-	- `app.bsky.graph.follow`
-	- `app.bsky.graph.listitem`
-	- `app.bsky.actor.profile`
-	- `app.bsky.graph.block`
-	- `app.bsky.feed.post`
-	- `app.bsky.graph.starterpack`
+- Bluesky Firehose connection using Jetstreams.
+- Custom types for the following messages
+	- Account
+	- Identity
+	- Commit
+		- `app.bsky.feed.like`
+		- `app.bsky.graph.follow`
+		- `app.bsky.graph.listitem`
+		- `app.bsky.actor.profile`
+		- `app.bsky.graph.block`
+		- `app.bsky.feed.post`
+		- `app.bsky.graph.starterpack`
 
 
 ## Author
 
-[🦋 @fitomad.bsky.social](https://bsky.app/profile/fitomad.bsky.social)
-[LinkedIn](https://www.linkedin.com/in/adolfo-vera/)
+You can reach me here 👇
 
-
+- [🦋 @fitomad.bsky.social](https://bsky.app/profile/fitomad.bsky.social)
+- [LinkedIn](https://www.linkedin.com/in/adolfo-vera/)
