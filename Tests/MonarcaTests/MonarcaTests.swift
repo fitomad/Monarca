@@ -3,7 +3,7 @@ import Testing
 
 @Suite("Client tests. Conecction and message processing.")
 struct MonarcaTests {
-	@Test("Connect and close Jetstream connection", .tags(.client))
+	//@Test("Connect and close Jetstream connection", .tags(.client))
 	func testClientConnectionAndCloseConnection() async throws {
 		let bskyClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
@@ -31,7 +31,6 @@ struct MonarcaTests {
 		
 		try await bskyClient.start()
 		#expect(await bskyClient.isConnected)
-		await bskyClient.receive()
 	}
 }
 

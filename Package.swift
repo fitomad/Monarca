@@ -7,7 +7,7 @@ let package = Package(
     name: "Monarca",
 	platforms: [
 		.iOS(.v13),
-		.macOS(.v10_15)
+		.macOS(.v13)
 	],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -15,11 +15,21 @@ let package = Package(
             name: "Monarca",
             targets: ["Monarca"]),
     ],
+	dependencies: [
+		.package(url: "https://github.com/apple/swift-nio.git", from: "2.83.0")
+	],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Monarca"
+            name: "Monarca",
+			dependencies: [
+				.product(name: "NIOCore", package: "swift-nio"),
+				.product(name: "NIOPosix", package: "swift-nio"),
+				.product(name: "NIOHTTP1", package: "swift-nio"),
+				.product(name: "NIOWebSocket", package: "swift-nio"),
+				.product(name: "NIOFoundationCompat", package: "swift-nio")
+			]
 		),
         .testTarget(
             name: "MonarcaTests",
