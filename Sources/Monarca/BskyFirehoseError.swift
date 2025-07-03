@@ -12,7 +12,14 @@ public enum BskyFirehoseError: Error {
 	case invalidConnectionParameters
 	case invalidData
 	case messageManagerNotAvailable
-	case invalidMessage(content: URLSessionWebSocketTask.Message)
+	case invalidMessage(content: BskyFirehoseError.Content)
+}
+
+extension BskyFirehoseError {
+	public enum Content: Sendable {
+		case string(_ value: String)
+		case data(_ value: Data)
+	}
 }
 
 extension BskyFirehoseError: Equatable {

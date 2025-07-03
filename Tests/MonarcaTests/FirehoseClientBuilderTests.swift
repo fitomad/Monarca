@@ -24,8 +24,8 @@ struct BuilderTests {
 			.withHost(server)
 			.build()
 		
-		#expect(await firehoseClient.settings.host != nil)
-		#expect(await firehoseClient.settings.host!.endpoint == server.endpoint)
+		#expect(firehoseClient.settings.host != nil)
+		#expect(firehoseClient.settings.host!.endpoint == server.endpoint)
 	}
 	
 	@Test("", .tags(.builder), arguments: Constants.customServerList)
@@ -34,8 +34,8 @@ struct BuilderTests {
 			.withHost(custom)
 			.build()
 		
-		#expect(await firehoseClient.settings.host != nil)
-		#expect(await firehoseClient.settings.host!.endpoint == custom.endpoint)
+		#expect(firehoseClient.settings.host != nil)
+		#expect(firehoseClient.settings.host!.endpoint == custom.endpoint)
 	}
 	
 	@Test("", .tags(.builder))
@@ -45,8 +45,8 @@ struct BuilderTests {
 			.withCollections([Collection]())
 			.build()
 		
-		#expect(await firehoseClient.settings.collections != nil)
-		#expect(await firehoseClient.settings.collections!.isEmpty)
+		#expect(firehoseClient.settings.collections != nil)
+		#expect(firehoseClient.settings.collections!.isEmpty)
 	}
 	
 	@Test("", .tags(.builder))
@@ -56,11 +56,11 @@ struct BuilderTests {
 			.withCollections([ "a", "b", "c" ])
 			.build()
 		
-		#expect(await firehoseClient.settings.collections != nil)
-		#expect(await firehoseClient.settings.collections!.count == 3)
-		#expect(await firehoseClient.settings.collections!.contains("a"))
-		#expect(await firehoseClient.settings.collections!.contains("b"))
-		#expect(await firehoseClient.settings.collections!.contains("c"))
+		#expect(firehoseClient.settings.collections != nil)
+		#expect(firehoseClient.settings.collections!.count == 3)
+		#expect(firehoseClient.settings.collections!.contains("a"))
+		#expect(firehoseClient.settings.collections!.contains("b"))
+		#expect(firehoseClient.settings.collections!.contains("c"))
 	}
 	
 	@Test("", .tags(.builder))
@@ -70,8 +70,8 @@ struct BuilderTests {
 			.withDecentralizedIdentifiers([])
 			.build()
 		
-		#expect(await firehoseClient.settings.decentralizedIdentifiers != nil)
-		#expect(await firehoseClient.settings.decentralizedIdentifiers!.isEmpty)
+		#expect(firehoseClient.settings.decentralizedIdentifiers != nil)
+		#expect(firehoseClient.settings.decentralizedIdentifiers!.isEmpty)
 	}
 	
 	@Test("", .tags(.builder))
@@ -81,8 +81,8 @@ struct BuilderTests {
 			.withDecentralizedIdentifiers(Constants.customIdentifierList)
 			.build()
 		
-		#expect(await firehoseClient.settings.decentralizedIdentifiers != nil)
-		#expect(await firehoseClient.settings.decentralizedIdentifiers!.count == Constants.customIdentifierList.count)
+		#expect(firehoseClient.settings.decentralizedIdentifiers != nil)
+		#expect(firehoseClient.settings.decentralizedIdentifiers!.count == Constants.customIdentifierList.count)
 	}
 	
 	@Test("", .tags(.builder))
@@ -92,8 +92,8 @@ struct BuilderTests {
 			.withCompressionEnabled(true)
 			.build()
 		
-		#expect(await firehoseClient.settings.isCompressionEnabled != nil)
-		#expect(await firehoseClient.settings.isCompressionEnabled!)
+		#expect(firehoseClient.settings.isCompressionEnabled != nil)
+		#expect(firehoseClient.settings.isCompressionEnabled!)
 	}
 	
 	@Test("", .tags(.builder))
@@ -103,8 +103,8 @@ struct BuilderTests {
 			.withCompressionEnabled(false)
 			.build()
 		
-		#expect(await firehoseClient.settings.isCompressionEnabled != nil)
-		#expect(await firehoseClient.settings.isCompressionEnabled! == false)
+		#expect(firehoseClient.settings.isCompressionEnabled != nil)
+		#expect(firehoseClient.settings.isCompressionEnabled! == false)
 	}
 	
 	@Test("", .tags(.builder))
@@ -114,8 +114,8 @@ struct BuilderTests {
 			.withHelloExecution(true)
 			.build()
 		
-		#expect(await firehoseClient.settings.isHelloRequired != nil)
-		#expect(await firehoseClient.settings.isHelloRequired!)
+		#expect(firehoseClient.settings.isHelloRequired != nil)
+		#expect(firehoseClient.settings.isHelloRequired!)
 	}
 	
 	@Test("", .tags(.builder))
@@ -125,8 +125,8 @@ struct BuilderTests {
 			.withHelloExecution(false)
 			.build()
 		
-		#expect(await firehoseClient.settings.isHelloRequired != nil)
-		#expect(await firehoseClient.settings.isHelloRequired! == false)
+		#expect(firehoseClient.settings.isHelloRequired != nil)
+		#expect(firehoseClient.settings.isHelloRequired! == false)
 	}
 	
 	@Test("", .tags(.builder), arguments: Constants.messagesSizeList)
@@ -136,8 +136,8 @@ struct BuilderTests {
 			.withMaximumMessageSize(testSet.sut)
 			.build()
 		
-		#expect(await firehoseClient.settings.maximumMessageSize != nil)
-		#expect(await firehoseClient.settings.maximumMessageSize! == testSet.expectedValue)
+		#expect(firehoseClient.settings.maximumMessageSize != nil)
+		#expect(firehoseClient.settings.maximumMessageSize! == testSet.expectedValue)
 	}
 	
 	@Test("", .tags(.builder), arguments: Constants.playbackList)
@@ -151,9 +151,9 @@ struct BuilderTests {
 			.withPlayback(sut)
 			.build()
 		
-		#expect(await firehoseClient.settings.playback != nil)
-		#expect(await firehoseClient.settings.playback!.timeValue > lowEpochBound)
-		#expect(await firehoseClient.settings.playback!.timeValue < maxEpochBound)
+		#expect(firehoseClient.settings.playback != nil)
+		#expect(firehoseClient.settings.playback!.timeValue > lowEpochBound)
+		#expect(firehoseClient.settings.playback!.timeValue < maxEpochBound)
 	}
 	
 	@Test("", .tags(.builder))
@@ -166,7 +166,7 @@ struct BuilderTests {
 			.withMessageManager(mockMessageManager)
 			.build()
 		
-		#expect(await firehoseClient.settings.messageManager != nil)
+		#expect(firehoseClient.settings.messageManager != nil)
 	}
 	
 	@Test("", .tags(.builder))
@@ -183,13 +183,13 @@ struct BuilderTests {
 			.withPlayback(.seconds(5))
 			.build()
 			
-		#expect(await firehoseClient.settings.host != nil)
-		#expect(await firehoseClient.settings.collections != nil)
-		#expect(await firehoseClient.settings.decentralizedIdentifiers != nil)
-		#expect(await firehoseClient.settings.isCompressionEnabled != nil)
-		#expect(await firehoseClient.settings.isHelloRequired != nil)
-		#expect(await firehoseClient.settings.maximumMessageSize != nil)
-		#expect(await firehoseClient.settings.playback != nil)
+		#expect(firehoseClient.settings.host != nil)
+		#expect(firehoseClient.settings.collections != nil)
+		#expect(firehoseClient.settings.decentralizedIdentifiers != nil)
+		#expect(firehoseClient.settings.isCompressionEnabled != nil)
+		#expect(firehoseClient.settings.isHelloRequired != nil)
+		#expect(firehoseClient.settings.maximumMessageSize != nil)
+		#expect(firehoseClient.settings.playback != nil)
 		
 		await builder.reset()
 		
@@ -197,13 +197,13 @@ struct BuilderTests {
 			.withHost(.usaEast1)
 			.build()
 		
-		#expect(await firehoseClient.settings.host != nil)
-		#expect(await firehoseClient.settings.collections == nil)
-		#expect(await firehoseClient.settings.decentralizedIdentifiers == nil)
-		#expect(await firehoseClient.settings.isCompressionEnabled == nil)
-		#expect(await firehoseClient.settings.isHelloRequired == nil)
-		#expect(await firehoseClient.settings.maximumMessageSize == nil)
-		#expect(await firehoseClient.settings.playback == nil)
+		#expect(firehoseClient.settings.host != nil)
+		#expect(firehoseClient.settings.collections == nil)
+		#expect(firehoseClient.settings.decentralizedIdentifiers == nil)
+		#expect(firehoseClient.settings.isCompressionEnabled == nil)
+		#expect(firehoseClient.settings.isHelloRequired == nil)
+		#expect(firehoseClient.settings.maximumMessageSize == nil)
+		#expect(firehoseClient.settings.playback == nil)
 	}
 }
 

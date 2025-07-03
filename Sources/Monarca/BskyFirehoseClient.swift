@@ -11,29 +11,32 @@ import NIOFoundationCompat
 import WebSocketKit
 
 public typealias MessageReceivedClosure = @Sendable (BskyMessage) -> Void
-public typealias ErrorReceivedClosure = (BskyFirehoseError) -> Void
+public typealias ErrorReceivedClosure = @Sendable (BskyFirehoseError) -> Void
 
-public actor BskyFirehoseClient: Sendable {
-	private var onMessageReceived: MessageReceivedClosure?
-	private var onErrorProcessingMessage: ErrorReceivedClosure?
+public final class BskyFirehoseClient: Sendable {
+	private let onMessageReceived: MessageReceivedClosure?
+	private let onErrorProcessingMessage: ErrorReceivedClosure?
 	public let settings: BskyFirehoseSettings
 	
-	private lazy var mapper = BskyFirehoseSettingsMapper()
+	private let eventLoopGroup: MultiThreadedEventLoopGroup
 	
-	private let eventLoopGroup: MultiThreadedEventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 2)
-	
-	private var status: BskyFirehoseClient.Status = .closed
-	
-	public var isConnected: Bool {
-		status == .connected
+	private var mapper: BskyFirehoseSettingsMapper {
+		BskyFirehoseSettingsMapper()
 	}
 	
-	init(settings:  BskyFirehoseSettings) {
+	init(settings:  BskyFirehoseSettings,
+		 onMessageReceived: MessageReceivedClosure? = nil,
+		 onErrorProcessingMessage: ErrorReceivedClosure? = nil)
+	{
 		self.settings = settings
+		eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: settings.dedicatedThreads)
+		
+		self.onMessageReceived = onMessageReceived
+		self.onErrorProcessingMessage = onErrorProcessingMessage
 	}
 
 	public func start() async throws {
-		guard let bskyMessageManager = await settings.messageManager else {
+		guard let bskyMessageManager = settings.messageManager else {
 			throw BskyFirehoseError.messageManagerNotAvailable
 		}
 		
@@ -43,41 +46,27 @@ public actor BskyFirehoseClient: Sendable {
 			throw BskyFirehoseError.invalidConnectionParameters
 		}
 		
-		WebSocket.connect(to: bskyURL, on: eventLoopGroup) { ws in
-				var incomingMessage: BskyMessage?
-				
-				ws.onText { ws, content in
-					if let incomingMessage = try? await bskyMessageManager.processMessage(string: content) {
-						await self.onMessageReceived?(incomingMessage)
-					}
+		WebSocket.connect(to: bskyURL, on: eventLoopGroup) { [unowned self] ws in
+			ws.onText { ws, content in
+				do {
+					let incomingMessage = try await bskyMessageManager.processMessage(string: content)
+					self.onMessageReceived?(incomingMessage)
+				} catch {
+					self.onErrorProcessingMessage?(.invalidMessage(content: .string(content)))
 				}
+			}
+			
+			ws.onBinary { ws, byteBuffer in
+				let bytes = Data(buffer: byteBuffer)
 				
-				ws.onBinary { ws, byteBuffer in
-					let data = Data(buffer: byteBuffer)
-					if let incomingMessage = try? await bskyMessageManager.processMessage(content: data) {
-						await self.onMessageReceived?(incomingMessage)
-					}
+				do {
+					let incomingMessage = try await bskyMessageManager.processMessage(content: bytes)
+					self.onMessageReceived?(incomingMessage)
+				} catch {
+					self.onErrorProcessingMessage?(.invalidMessage(content: .data(bytes)))
 				}
+			}
 		}
-
-		
-		status = .connected
-	}
-	
-	public func stop() {
-		guard isConnected else {
-			return
-		}
-		
-		status = .closed
-	}
-	
-	public func onMessageReceived(_ perform: @escaping @Sendable MessageReceivedClosure) {
-		self.onMessageReceived = perform
-	}
-	
-	public func onErrorProcessingMessage(_ perform: @escaping @Sendable ErrorReceivedClosure) {
-		self.onErrorProcessingMessage = perform
 	}
 }
 

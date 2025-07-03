@@ -7,8 +7,8 @@
 
 import Foundation
 
-actor AllMessagesManager: BskyMessageManager {
-    private let handlersChain: [any BskyMessageHandler]
+struct AllMessagesManager: BskyMessageManager {
+	private var handlersChain: [any BskyMessageHandler]
     private let jsonDecoder = JSONDecoder()
     
     init() async {
@@ -23,7 +23,7 @@ actor AllMessagesManager: BskyMessageManager {
         try? await buildHandlersChain()
     }
     
-    private func buildHandlersChain() async throws {
+    private mutating func buildHandlersChain() async throws {
         guard handlersChain.isEmpty == false else {
             throw BskyMessageManagerError.unavailableHandlers
         }
@@ -34,7 +34,7 @@ actor AllMessagesManager: BskyMessageManager {
     }
     
     func processMessage(content data: Data) async throws -> BskyMessage {
-		guard let firstHandler = handlersChain.first else {
+		guard var firstHandler = handlersChain.first else {
 			throw BskyMessageManagerError.unavailableHandlers
         }
         

@@ -7,75 +7,89 @@
 
 import Foundation
 
-public struct DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
-	private let settings: BskyFirehoseSettings
+public final class DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
+	private var settings: BskyFirehoseSettings
+	private var onMessageReceived: MessageReceivedClosure?
+	private var onErrorProcessingMessage: ErrorReceivedClosure?
 	
 	public init() {
 		settings = BskyFirehoseSettings()
 	}
     
 	public func withHost(_ server: FireshoseHost) async -> Self {
-		await settings.set(host: server)
+		settings.set(host: server)
         return self
     }
     
-    public func withCollections(_ collection: [String]) async -> Self {
-		await settings.set(collections: collection)
+	@available(*, deprecated, message: "Use the `withCollections(_: [Collection])` method instead.")
+	public func withCollections(_ collection: [String]) async -> Self {
+		settings.set(collections: collection)
         return self
     }
 	
 	public func withCollections(_ collection: [Collection]) async -> Self {
 		let collectionsRawValues = collection.map { $0.rawValue }
-		await settings.set(collections: collectionsRawValues)
+		settings.set(collections: collectionsRawValues)
 		
 		return self
 	}
     
-    public func withDecentralizedIdentifiers(_ identifiers: [String]) async -> Self {
-		await settings.set(decentralizedIdentifiers: identifiers)
+	public func withDecentralizedIdentifiers(_ identifiers: [String]) async -> Self {
+		settings.set(decentralizedIdentifiers: identifiers)
         return self
     }
     
-    public func withMaximumMessageSize(_ size: MessageSize) async -> Self {
-		await settings.set(maximumMessageSize: size)
+	public func withMaximumMessageSize(_ size: MessageSize) async -> Self {
+		settings.set(maximumMessageSize: size)
         return self
     }
     
-    public func withPlayback(_ playback: Playback) async -> Self {
-		await settings.set(playback: playback)
+	public func withPlayback(_ playback: Playback) async -> Self {
+		settings.set(playback: playback)
         return self
     }
     
-    public func withCompressionEnabled(_ value: Bool) async -> Self {
-		await settings.set(isCompressionEnabled: value)
+	public func withCompressionEnabled(_ value: Bool) async -> Self {
+		settings.set(isCompressionEnabled: value)
         return self
     }
     
-    public func withHelloExecution(_ value: Bool) async -> Self {
-		await settings.set(isHelloRequired: value)
+	public func withHelloExecution(_ value: Bool) async -> Self {
+		settings.set(isHelloRequired: value)
         return self
     }
 	
-	  public func withMessageManager(_ messageManager: any BskyMessageManager) async -> Self {
-		    await settings.set(messageManager: messageManager)
-		    return self
-	  }
+	public func withMessageManager(_ messageManager: any BskyMessageManager) async -> Self {
+		settings.set(messageManager: messageManager)
+		return self
+	}
+	
+	public func onMessageReceived(_ closure: @escaping MessageReceivedClosure) -> Self {
+		onMessageReceived = closure
+		return self
+	}
+	
+	public func onErrorProcessingMessage(_ closure: @escaping ErrorReceivedClosure) -> Self {
+		onErrorProcessingMessage = closure
+		return self
+	}
     
-    public mutating func reset() async {
+    public func reset() async {
 		await settings.reset()
     }
     
-	 public func build() async throws(BskyFirehoseError) -> sending BskyFirehoseClient {
-		guard let _ = await settings.host else {
+	
+	public func build() async throws(BskyFirehoseError) -> BskyFirehoseClient {
+		guard let _ = settings.host else {
 			throw BskyFirehoseError.invalidConnectionParameters
 		}
 		
-		if await settings.messageManager == nil {
+		if settings.messageManager == nil {
 			await settings.set(messageManager: AllMessagesManager())
 		}
 		
-		let client = BskyFirehoseClient(settings: settings)
-		
-		return client
+		return BskyFirehoseClient(settings: settings,
+								  onMessageReceived: onMessageReceived,
+								  onErrorProcessingMessage: onErrorProcessingMessage)
     }
 }

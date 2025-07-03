@@ -24,7 +24,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(deletedMessage) = message {
@@ -42,7 +42,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(likeMessage) = message {
@@ -66,7 +66,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(repostMessage) = message {
@@ -90,7 +90,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(followMessage) = message {
@@ -114,7 +114,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(listItemMessage) = message {
@@ -138,7 +138,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(blockMessage) = message {
@@ -162,7 +162,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(profileMessage) = message {
@@ -195,7 +195,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(postMessage) = message {
@@ -232,7 +232,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(postMessage) = message {

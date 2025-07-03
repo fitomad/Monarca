@@ -7,22 +7,22 @@
 
 import Foundation
 
-actor CommitMessageHandler: Sendable {
+struct CommitMessageHandler {
 	private(set) var nextHandler: (any BskyMessageHandler)?
 }
 
 extension CommitMessageHandler: BskyMessageHandler {
-	func setNextHandler(_ handler: any BskyMessageHandler) {
+	mutating func setNextHandler(_ handler: any BskyMessageHandler) {
 		self.nextHandler = handler
 	}
 	
-	func processMessage(content data: Data, using decoder: JSONDecoder) async throws -> BskyMessage {
+	mutating func processMessage(content data: Data, using decoder: JSONDecoder) async throws -> BskyMessage {
 		do {
 			let commitMessage = try decoder.decode(BskyMessage.Commit.self, from: data)
 			
 			return .commit(payload: commitMessage)
-		} catch let error {
-			guard let nextHandler else {
+		} catch {
+			guard var nextHandler else {
 				throw BskyMessageManagerError.unprocessable(message: data)
 			}
 			

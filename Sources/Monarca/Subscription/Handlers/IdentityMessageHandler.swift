@@ -7,21 +7,21 @@
 
 import Foundation
 
-actor IdentityMessageHandler: Sendable {
+struct IdentityMessageHandler {
 	private(set) var nextHandler: (any BskyMessageHandler)?
 }
 
 extension IdentityMessageHandler: BskyMessageHandler {
-	func setNextHandler(_ handler: any BskyMessageHandler) async {
+	mutating func setNextHandler(_ handler: any BskyMessageHandler) async {
 		self.nextHandler = handler
 	}
 	
-    func processMessage(content data: Data, using decoder: JSONDecoder) async throws -> BskyMessage {
+    mutating func processMessage(content data: Data, using decoder: JSONDecoder) async throws -> BskyMessage {
         do {
             let identityMessage = try decoder.decode(BskyMessage.Identity.self, from: data)
             return .identity(payload: identityMessage)
         } catch {
-            guard let nextHandler else {
+            guard var nextHandler else {
                 throw BskyMessageManagerError.unprocessable(message: data)
             }
             
