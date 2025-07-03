@@ -25,7 +25,7 @@ struct MonarcaTests {
 			.build()
 		
 		await bskyClient.onMessageReceived { message in
-			print(message)
+			print("📣 \(message)")
 			#expect(true)
 		}
 		

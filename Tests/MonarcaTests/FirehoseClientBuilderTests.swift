@@ -42,7 +42,7 @@ struct BuilderTests {
 	func testClientCollections() async throws  {
 		let firehoseClient = try await DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
-			.withCollections([])
+			.withCollections([Collection]())
 			.build()
 		
 		#expect(await firehoseClient.settings.collections != nil)
