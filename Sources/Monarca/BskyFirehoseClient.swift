@@ -13,9 +13,9 @@ import WebSocketKit
 public typealias MessageReceivedClosure = @Sendable (BskyMessage) -> Void
 public typealias ErrorReceivedClosure = @Sendable (BskyFirehoseError) -> Void
 
-public final class BskyFirehoseClient: Sendable {
-	private let onMessageReceived: MessageReceivedClosure?
-	private let onErrorProcessingMessage: ErrorReceivedClosure?
+public final class BskyFirehoseClient {
+	private var onMessageReceived: MessageReceivedClosure?
+	private var onErrorProcessingMessage: ErrorReceivedClosure?
 	public let settings: BskyFirehoseSettings
 	
 	private let eventLoopGroup: MultiThreadedEventLoopGroup
@@ -24,15 +24,9 @@ public final class BskyFirehoseClient: Sendable {
 		BskyFirehoseSettingsMapper()
 	}
 	
-	init(settings:  BskyFirehoseSettings,
-		 onMessageReceived: MessageReceivedClosure? = nil,
-		 onErrorProcessingMessage: ErrorReceivedClosure? = nil)
-	{
+	init(settings:  BskyFirehoseSettings){
 		self.settings = settings
 		eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: settings.dedicatedThreads)
-		
-		self.onMessageReceived = onMessageReceived
-		self.onErrorProcessingMessage = onErrorProcessingMessage
 	}
 
 	public func start() async throws {
@@ -46,13 +40,13 @@ public final class BskyFirehoseClient: Sendable {
 			throw BskyFirehoseError.invalidConnectionParameters
 		}
 		
-		WebSocket.connect(to: bskyURL, on: eventLoopGroup) { [weak self] ws in
+		WebSocket.connect(to: bskyURL, on: eventLoopGroup) { [unowned self] ws in
 			ws.onText { ws, content in
 				do {
 					let incomingMessage = try await bskyMessageManager.processMessage(string: content)
-					self?.onMessageReceived?(incomingMessage)
+					self.onMessageReceived?(incomingMessage)
 				} catch {
-					self?.onErrorProcessingMessage?(.invalidMessage(content: .string(content)))
+					self.onErrorProcessingMessage?(.invalidMessage(content: .string(content)))
 				}
 			}
 			
@@ -61,12 +55,20 @@ public final class BskyFirehoseClient: Sendable {
 				
 				do {
 					let incomingMessage = try await bskyMessageManager.processMessage(content: bytes)
-					self?.onMessageReceived?(incomingMessage)
+					self.onMessageReceived?(incomingMessage)
 				} catch {
-					self?.onErrorProcessingMessage?(.invalidMessage(content: .data(bytes)))
+					self.onErrorProcessingMessage?(.invalidMessage(content: .data(bytes)))
 				}
 			}
 		}
+	}
+
+	public func onMessageReceived(_ perform: @escaping MessageReceivedClosure) {
+		self.onMessageReceived = perform
+	}
+	
+	public func onErrorProcessingMessage(_ perform: @escaping ErrorReceivedClosure) {
+		self.onErrorProcessingMessage = perform
 	}
 }
 

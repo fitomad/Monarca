@@ -9,8 +9,6 @@ import Foundation
 
 public final class DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 	private var settings: BskyFirehoseSettings
-	private var onMessageReceived: MessageReceivedClosure?
-	private var onErrorProcessingMessage: ErrorReceivedClosure?
 	
 	public init() {
 		settings = BskyFirehoseSettings()
@@ -63,16 +61,6 @@ public final class DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 		settings.set(messageManager: messageManager)
 		return self
 	}
-	
-	public func onMessageReceived(_ closure: @escaping MessageReceivedClosure) -> Self {
-		onMessageReceived = closure
-		return self
-	}
-	
-	public func onErrorProcessingMessage(_ closure: @escaping ErrorReceivedClosure) -> Self {
-		onErrorProcessingMessage = closure
-		return self
-	}
     
     public func reset() async {
 		await settings.reset()
@@ -88,8 +76,6 @@ public final class DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 			await settings.set(messageManager: AllMessagesManager())
 		}
 		
-		return BskyFirehoseClient(settings: settings,
-								  onMessageReceived: onMessageReceived,
-								  onErrorProcessingMessage: onErrorProcessingMessage)
+		return BskyFirehoseClient(settings: settings)
     }
 }
