@@ -11,7 +11,7 @@ struct AllMessagesManager: BskyMessageManager {
 	private var handlersChain: [any BskyMessageHandler]
     private let jsonDecoder = JSONDecoder()
     
-    init() async {
+    init() {
         handlersChain = [
 			CommitMessageHandler(),
             IdentityMessageHandler(),
@@ -20,16 +20,16 @@ struct AllMessagesManager: BskyMessageManager {
         
         jsonDecoder.dateDecodingStrategy = .iso8601WithFractionalSeconds
         
-        try? await buildHandlersChain()
+        try? buildHandlersChain()
     }
     
-    private mutating func buildHandlersChain() async throws {
+    private mutating func buildHandlersChain() throws {
         guard handlersChain.isEmpty == false else {
             throw BskyMessageManagerError.unavailableHandlers
         }
         
         for index in 0 ..< (handlersChain.count - 1) {
-            await handlersChain[index].setNextHandler(handlersChain[index + 1])
+            handlersChain[index].setNextHandler(handlersChain[index + 1])
         }
     }
     

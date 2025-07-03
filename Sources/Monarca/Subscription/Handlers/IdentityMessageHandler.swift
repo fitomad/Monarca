@@ -12,7 +12,7 @@ struct IdentityMessageHandler {
 }
 
 extension IdentityMessageHandler: BskyMessageHandler {
-	mutating func setNextHandler(_ handler: any BskyMessageHandler) async {
+	mutating func setNextHandler(_ handler: any BskyMessageHandler) {
 		self.nextHandler = handler
 	}
 	

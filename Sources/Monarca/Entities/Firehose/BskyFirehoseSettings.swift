@@ -54,7 +54,7 @@ public struct BskyFirehoseSettings: Sendable {
 		self.dedicatedThreads = dedicatedThreads
 	}
 	
-	mutating func reset() async {
+	mutating func reset() {
 		host = nil
 		collections = nil
 		decentralizedIdentifiers = nil
