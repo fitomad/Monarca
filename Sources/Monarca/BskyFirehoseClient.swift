@@ -46,13 +46,13 @@ public final class BskyFirehoseClient: Sendable {
 			throw BskyFirehoseError.invalidConnectionParameters
 		}
 		
-		WebSocket.connect(to: bskyURL, on: eventLoopGroup) { [unowned self] ws in
+		WebSocket.connect(to: bskyURL, on: eventLoopGroup) { [weak self] ws in
 			ws.onText { ws, content in
 				do {
 					let incomingMessage = try await bskyMessageManager.processMessage(string: content)
-					self.onMessageReceived?(incomingMessage)
+					self?.onMessageReceived?(incomingMessage)
 				} catch {
-					self.onErrorProcessingMessage?(.invalidMessage(content: .string(content)))
+					self?.onErrorProcessingMessage?(.invalidMessage(content: .string(content)))
 				}
 			}
 			
@@ -61,9 +61,9 @@ public final class BskyFirehoseClient: Sendable {
 				
 				do {
 					let incomingMessage = try await bskyMessageManager.processMessage(content: bytes)
-					self.onMessageReceived?(incomingMessage)
+					self?.onMessageReceived?(incomingMessage)
 				} catch {
-					self.onErrorProcessingMessage?(.invalidMessage(content: .data(bytes)))
+					self?.onErrorProcessingMessage?(.invalidMessage(content: .data(bytes)))
 				}
 			}
 		}
