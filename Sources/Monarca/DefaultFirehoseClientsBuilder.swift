@@ -23,6 +23,13 @@ public struct DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 		await settings.set(collections: collection)
         return self
     }
+	
+	public func withCollections(_ collection: [Collection]) async -> Self {
+		let collectionsRawValues = collection.map { $0.rawValue }
+		await settings.set(collections: collectionsRawValues)
+		
+		return self
+	}
     
     public func withDecentralizedIdentifiers(_ identifiers: [String]) async -> Self {
 		await settings.set(decentralizedIdentifiers: identifiers)
