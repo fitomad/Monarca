@@ -9,10 +9,10 @@ import Foundation
 
 extension BskyMessage {
 	public struct Commit: Codable, Sendable {
-		let did: String
-		let createdAt: Int
-		let kind: String
-		let payload: BskyMessage.Commit.Payload
+		public let did: String
+		public let createdAt: Int
+		public let kind: String
+		public let payload: BskyMessage.Commit.Payload
 		
 		private enum CodingKeys: String, CodingKey {
 			case did
@@ -25,11 +25,11 @@ extension BskyMessage {
 
 extension BskyMessage.Commit {
 	public struct Payload: Codable, Sendable {
-		let cid: String?
-		let operation: BskyMessage.Commit.Operation
-		let collection: Collection
-		let relatedKey: String
-		let record: Record?
+		public let cid: String?
+		public let operation: BskyMessage.Commit.Operation
+		public let collection: Collection
+		public let relatedKey: String
+		public let record: Record?
 		
 		private enum CodingKeys: String, CodingKey {
 			case cid

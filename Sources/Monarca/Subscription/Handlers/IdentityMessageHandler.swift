@@ -27,6 +27,5 @@ extension IdentityMessageHandler: BskyMessageHandler {
             
             return try await nextHandler.processMessage(content: data, using: decoder)
         }
-        
     }
 }

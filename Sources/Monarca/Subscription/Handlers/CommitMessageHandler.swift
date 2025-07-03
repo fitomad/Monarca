@@ -19,6 +19,7 @@ extension CommitMessageHandler: BskyMessageHandler {
 	func processMessage(content data: Data, using decoder: JSONDecoder) async throws -> BskyMessage {
 		do {
 			let commitMessage = try decoder.decode(BskyMessage.Commit.self, from: data)
+			
 			return .commit(payload: commitMessage)
 		} catch let error {
 			guard let nextHandler else {
