@@ -13,7 +13,7 @@ import WebSocketKit
 public typealias MessageReceivedClosure = @Sendable (BskyMessage) -> Void
 public typealias ErrorReceivedClosure = @Sendable (BskyFirehoseError) -> Void
 
-public final class BskyFirehoseClient {
+public actor BskyFirehoseClient {
 	private var onMessageReceived: MessageReceivedClosure?
 	private var onErrorProcessingMessage: ErrorReceivedClosure?
 	public let settings: BskyFirehoseSettings
@@ -40,13 +40,13 @@ public final class BskyFirehoseClient {
 			throw BskyFirehoseError.invalidConnectionParameters
 		}
 		
-		WebSocket.connect(to: bskyURL, on: eventLoopGroup) { [unowned self] ws in
+		WebSocket.connect(to: bskyURL, on: eventLoopGroup) { ws in
 			ws.onText { ws, content in
 				do {
 					let incomingMessage = try await bskyMessageManager.processMessage(string: content)
-					self.onMessageReceived?(incomingMessage)
+					await self.onMessageReceived?(incomingMessage)
 				} catch {
-					self.onErrorProcessingMessage?(.invalidMessage(content: .string(content)))
+					await self.onErrorProcessingMessage?(.invalidMessage(content: .string(content)))
 				}
 			}
 			
@@ -55,9 +55,9 @@ public final class BskyFirehoseClient {
 				
 				do {
 					let incomingMessage = try await bskyMessageManager.processMessage(content: bytes)
-					self.onMessageReceived?(incomingMessage)
+					await self.onMessageReceived?(incomingMessage)
 				} catch {
-					self.onErrorProcessingMessage?(.invalidMessage(content: .data(bytes)))
+					await self.onErrorProcessingMessage?(.invalidMessage(content: .data(bytes)))
 				}
 			}
 		}
