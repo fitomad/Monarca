@@ -5,15 +5,14 @@ import Testing
 struct MonarcaTests {
 	@Test("Receive a message from the BlueSky Jetstream", .tags(.client))
 	func testClientMessageReceived() async throws {
-		let messageReceivedClosure: @Sendable (BskyMessage) -> Void = { message in
-			#expect(true)
-		}
-		
-		let bskyClient = try await DefaultFirehoseClientBuilder()
+		let bskyClient = try DefaultFirehoseClientBuilder()
 			.withHost(.usaEast1)
 			.withMessageManager(MockMessageManager())
-			.onMessageReceived(messageReceivedClosure)
 			.build()
+		
+		await bskyClient.onMessageReceived { message in
+			#expect(true)
+		}
 		
 		try await bskyClient.start()
 	}
