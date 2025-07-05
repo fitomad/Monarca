@@ -186,6 +186,9 @@ Monarca is licensed under the MIT License. See LICENSE for details.
 	- `applyContentFilter(by:)` Process only those messages that contains 1 or N of the given hashtags
 	- `applyHashtagFilter(by:)` Process only those messages that contains 1 or N of the given words
 - Information about**video** in a *Post* message.
+- Support for the following Commit collections
+	- `app.bsky.feed.threadgate`
+	- `app.bsky.feed.postgate`
 
 ### 0.1.0
 

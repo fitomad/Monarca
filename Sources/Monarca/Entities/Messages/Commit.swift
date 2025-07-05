@@ -80,15 +80,17 @@ extension BskyMessage.Commit {
 						if let data = try? values.decode(Record.Post.self, forKey: .record) {
 							decodedRecord = .post(payload: data)
 						}
-						
-						do {
-							try values.decode(Record.Post.self, forKey: .record)
-						} catch {
-							print("🚨 \(error)")
-						}
 					case .starterPack:
 						if let data = try? values.decode(Record.StarterPack.self, forKey: .record) {
 							decodedRecord = .starterPack(payload: data)
+						}
+					case .threadGate:
+						if let data = try? values.decode(Record.ThreadGate.self, forKey: .record) {
+							decodedRecord = .threadGate(payload: data)
+						}
+					case .postGate:
+						if let data = try? values.decode(Record.PostGate.self, forKey: .record) {
+							decodedRecord = .postGate(payload: data)
 						}
 				}
 			} catch {

@@ -19,6 +19,8 @@ public enum BskyCollection: String, Codable, Sendable {
 	case block = "app.bsky.graph.block"
 	case post = "app.bsky.feed.post"
 	case starterPack = "app.bsky.graph.starterpack"
+	case threadGate = "app.bsky.feed.threadgate"
+	case postGate = "app.bsky.feed.postgate"
 }
 
 extension BskyCollection: CustomStringConvertible {
