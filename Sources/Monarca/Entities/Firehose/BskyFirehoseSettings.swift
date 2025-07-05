@@ -63,6 +63,7 @@ public struct BskyFirehoseSettings: Sendable {
 		isCompressionEnabled = nil
 		isHelloRequired = nil
 		messageManager = nil
+		dedicatedThreads = 2
 	}
 }
 

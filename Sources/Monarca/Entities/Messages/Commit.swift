@@ -27,7 +27,7 @@ extension BskyMessage.Commit {
 	public struct Payload: Codable, Sendable {
 		public let cid: String?
 		public let operation: BskyMessage.Commit.Operation
-		public let collection: Collection
+		public let collection: BskyCollection
 		public let relatedKey: String
 		public let record: Record?
 		
@@ -49,7 +49,7 @@ extension BskyMessage.Commit {
 			var decodedRecord: Record? = nil
 			
 			do {
-				collection = try values.decode(Collection.self, forKey: .collection)
+				collection = try values.decode(BskyCollection.self, forKey: .collection)
 				
 				switch collection {
 					case .repost:
@@ -79,6 +79,12 @@ extension BskyMessage.Commit {
 					case .post:
 						if let data = try? values.decode(Record.Post.self, forKey: .record) {
 							decodedRecord = .post(payload: data)
+						}
+						
+						do {
+							try values.decode(Record.Post.self, forKey: .record)
+						} catch {
+							print("🚨 \(error)")
 						}
 					case .starterPack:
 						if let data = try? values.decode(Record.StarterPack.self, forKey: .record) {

@@ -8,10 +8,10 @@
 import Foundation
 
 struct AllMessagesManager: BskyMessageManager {
-	private var handlersChain: [any BskyMessageHandler]
+	private(set) var handlersChain: [any BskyMessageHandler]
     private let jsonDecoder = JSONDecoder()
     
-    init() {
+	init() {
         handlersChain = [
 			CommitMessageHandler(),
             IdentityMessageHandler(),
@@ -19,6 +19,7 @@ struct AllMessagesManager: BskyMessageManager {
         ]
         
         jsonDecoder.dateDecodingStrategy = .iso8601WithFractionalSeconds
+		jsonDecoder.allowsJSON5 = true
         
         try? buildHandlersChain()
     }
@@ -51,5 +52,11 @@ struct AllMessagesManager: BskyMessageManager {
 		}
 		
 		return try await processMessage(content: data)
+	}
+	
+	mutating func addMessageHandlerFilters(_ filters: [any BskyMessageHandler]) {
+		handlersChain.insert(contentsOf: filters, at: 1)
+		
+		try? buildHandlersChain()
 	}
 }
