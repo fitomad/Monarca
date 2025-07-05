@@ -14,6 +14,7 @@ struct MessageHandlerTests {
 	var jsonDecoder: JSONDecoder {
 		let jsonDecoder = JSONDecoder()
 		jsonDecoder.dateDecodingStrategy = .iso8601WithFractionalSeconds
+		jsonDecoder.allowsJSON5 = true
 		
 		return jsonDecoder
 	}
@@ -24,7 +25,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(deletedMessage) = message {
@@ -42,7 +43,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(likeMessage) = message {
@@ -66,7 +67,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(repostMessage) = message {
@@ -90,7 +91,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(followMessage) = message {
@@ -114,7 +115,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(listItemMessage) = message {
@@ -138,7 +139,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(blockMessage) = message {
@@ -162,7 +163,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(profileMessage) = message {
@@ -195,7 +196,7 @@ struct MessageHandlerTests {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(postMessage) = message {
@@ -228,11 +229,11 @@ struct MessageHandlerTests {
 	
 	@Test("Commit // Post (With Images, Reply and Facets)", .tags(.messageHandler))
 	func testCommitPostWithFacetsDecoding() async throws {
-		guard let data = MockMessages.commitPostWithFacet.data(using: .utf8) else {
+		guard let data = MockMessages.commitPostWithFacetLink.data(using: .utf8) else {
 			throw MessageHandlerTestsError.invalidJSON
 		}
 		
-		let handler = CommitMessageHandler()
+		var handler = CommitMessageHandler()
 		let message = try await handler.processMessage(content: data, using: jsonDecoder)
 		
 		if case let .commit(postMessage) = message {
@@ -260,6 +261,102 @@ struct MessageHandlerTests {
 		} else {
 			throw MessageHandlerTestsError.contentNotAvailable
 		}
+	}
+	
+	@Test("Commit // Post with Facet (Hashtag)")
+	func testFilterByHashtag_GivenOne_Success() async throws {
+		guard let data = MockMessages.commitPostWithFacetTag.data(using: .utf8) else {
+			throw MessageHandlerTestsError.invalidJSON
+		}
+		
+		var handler = HashtagFilteredCommitMessageHandler(by: [ "MarioKartWorld" ])
+		let message = try? await handler.processMessage(content: data, using: jsonDecoder)
+		
+		#expect(message != nil)
+	}
+	
+	@Test("Commit // Post with Facet (Hashtag)")
+	func testFilterByHashtag_GivenTwoOnlyOneAvailable_Success() async throws {
+		guard let data = MockMessages.commitPostWithFacetTag.data(using: .utf8) else {
+			throw MessageHandlerTestsError.invalidJSON
+		}
+		
+		var handler = HashtagFilteredCommitMessageHandler(by: [ "MarioKartWorld", "NonAvailableHashtag" ])
+		let message = try? await handler.processMessage(content: data, using: jsonDecoder)
+		
+		#expect(message != nil)
+	}
+	
+	@Test("Commit // Post with Facet (Hashtag)")
+	func testFilterByHashtag_GivenOneNoAvailable_Failure() async throws {
+		guard let data = MockMessages.commitPostWithFacetTag.data(using: .utf8) else {
+			throw MessageHandlerTestsError.invalidJSON
+		}
+		
+		var handler = HashtagFilteredCommitMessageHandler(by: [ "NonAvailableHashtag" ])
+		let message = try? await handler.processMessage(content: data, using: jsonDecoder)
+		
+		#expect(message == nil)
+	}
+	
+	@Test("Commit // Post with Facet (Hashtag)")
+	func testFilterByHashtag_GivenTwoNoneAvailable_Failure() async throws {
+		guard let data = MockMessages.commitPostWithFacetTag.data(using: .utf8) else {
+			throw MessageHandlerTestsError.invalidJSON
+		}
+		
+		var handler = HashtagFilteredCommitMessageHandler(by: [ "NonAvailableHashtagOne", "NonAvailableHashtagTwo" ])
+		let message = try? await handler.processMessage(content: data, using: jsonDecoder)
+		
+		#expect(message == nil)
+	}
+	
+	@Test("Commit // Post filter by term")
+	func testFilterByTerm_GivenOne_Success() async throws {
+		guard let data = MockMessages.commitPostWithFacetTag.data(using: .utf8) else {
+			throw MessageHandlerTestsError.invalidJSON
+		}
+		
+		var handler = ContentFilteredCommitMessageHandler(by: [ "Kart" ])
+		let message = try? await handler.processMessage(content: data, using: jsonDecoder)
+		
+		#expect(message != nil)
+	}
+	
+	@Test("Commit // Post filter by term")
+	func testFilterByTerm_GivenTwoOnlyOneMatch_Success() async throws {
+		guard let data = MockMessages.commitPostWithFacetTag.data(using: .utf8) else {
+			throw MessageHandlerTestsError.invalidJSON
+		}
+		
+		var handler = ContentFilteredCommitMessageHandler(by: [ "Kart", "EstaPalabraNoEstaEnEstePostSeguro" ])
+		let message = try? await handler.processMessage(content: data, using: jsonDecoder)
+		
+		#expect(message != nil)
+	}
+	
+	@Test("Commit // Post filter by term")
+	func testFilterByTerm_GivenTwoBothMatch_Success() async throws {
+		guard let data = MockMessages.commitPostWithFacetTag.data(using: .utf8) else {
+			throw MessageHandlerTestsError.invalidJSON
+		}
+		
+		var handler = ContentFilteredCommitMessageHandler(by: [ "Kart", "ghost" ])
+		let message = try? await handler.processMessage(content: data, using: jsonDecoder)
+		
+		#expect(message != nil)
+	}
+	
+	@Test("Commit // Post filter by term")
+	func testFilterByTerm_GivenOneNoMatch_Failure() async throws {
+		guard let data = MockMessages.commitPostWithFacetTag.data(using: .utf8) else {
+			throw MessageHandlerTestsError.invalidJSON
+		}
+		
+		var handler = ContentFilteredCommitMessageHandler(by: [ "EstaPalabraNoEstaEnElPost" ])
+		let message = try? await handler.processMessage(content: data, using: jsonDecoder)
+		
+		#expect(message == nil)
 	}
 }
 

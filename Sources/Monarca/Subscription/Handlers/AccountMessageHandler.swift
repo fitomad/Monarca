@@ -7,21 +7,21 @@
 
 import Foundation
 
-actor AccountMessageHandler: Sendable {
+struct AccountMessageHandler {
 	private(set) var nextHandler: (any BskyMessageHandler)?
 }
 
 extension AccountMessageHandler: BskyMessageHandler {
-	func setNextHandler(_ handler: any BskyMessageHandler) {
+	mutating func setNextHandler(_ handler: any BskyMessageHandler) {
 		self.nextHandler = handler
 	}
 	
-	func processMessage(content data: Data, using decoder: JSONDecoder) async throws -> BskyMessage {
+	mutating func processMessage(content data: Data, using decoder: JSONDecoder) async throws -> BskyMessage {
 		do {
 			let accountMessage = try decoder.decode(BskyMessage.Account.self, from: data)
 			return .account(payload: accountMessage)
 		} catch {
-			guard let nextHandler else {
+			guard var nextHandler else {
 				throw BskyMessageManagerError.unprocessable(message: data)
 			}
 			

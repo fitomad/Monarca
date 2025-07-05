@@ -10,10 +10,10 @@ import Foundation
 extension BskyMessage {
 	public struct Account: Codable, Sendable {
 		public struct Payload: Codable, Sendable {
-			let isActive: Bool
-			let did: String
-			let sequence: Int
-			let createdAt: Date
+			public let isActive: Bool
+			public let did: String
+			public let sequence: Int
+			public let createdAt: Date
 			
 			private enum CodingKeys: String, CodingKey {
 				case isActive = "active"
@@ -23,10 +23,10 @@ extension BskyMessage {
 			}
 		}
 		
-		let did: String
-		let createdAt: Int
-		let kind: String
-		let payload: BskyMessage.Account.Payload
+		public let did: String
+		public let createdAt: Int
+		public let kind: String
+		public let payload: BskyMessage.Account.Payload
 		
 		private enum CodingKeys: String, CodingKey {
 			case did

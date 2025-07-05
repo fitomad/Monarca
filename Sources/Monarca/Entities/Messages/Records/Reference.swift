@@ -9,7 +9,7 @@ import Foundation
 
 extension Record {
 	struct Reference: Codable, Sendable {
-		let atProtocolLink: String
+		public let atProtocolLink: String
 		
 		private enum CodingKeys: String, CodingKey {
 			case atProtocolLink = "$link"

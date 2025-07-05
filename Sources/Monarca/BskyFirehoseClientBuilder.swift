@@ -6,16 +6,31 @@
 //
 
 
-public protocol BskyFirehoseClientBuilder: Sendable {
-    func withHost(_ server: FireshoseHost) async -> Self
-    func withCollections(_ collection: [String]) async -> Self
-    func withDecentralizedIdentifiers(_ identifiers: [String]) async -> Self
-    func withMaximumMessageSize(_ size: MessageSize) async -> Self
-    func withPlayback(_ playback: Playback) async -> Self
-    func withCompressionEnabled(_ value: Bool) async -> Self
-    func withHelloExecution(_ value: Bool) async -> Self
-	func withMessageManager(_ messageManager: BskyMessageManager) async -> Self
+public protocol BskyFirehoseClientBuilder {
+	@available(*, deprecated, renamed: "connect(to:)")
+    func withHost(_ server: FireshoseHost) -> Self
+	func connect(to host: FireshoseHost) -> Self
+	@available(*, deprecated, renamed: "forCollections(_:)")
+	func withCollections(_ collection: [String]) -> Self
+	func forCollections(_ collection: [BskyCollection]) -> Self
+	func withDecentralizedIdentifiers(_ identifiers: [String]) -> Self
+	@available(*, deprecated, renamed: "withMaximumMessageSize(_:)")
+	func withMaximumMessageSize(_ size: MessageSize) -> Self
+	func maximumMessageSizeAllowed(_ size: MessageSize) -> Self
+	@available(*, deprecated, renamed: "messagesPlayback(since:)")
+	func withPlayback(_ playback: Playback) -> Self
+	func messagesPlayback(since moment: Playback) -> Self
+	@available(*, deprecated, renamed: "compressionEnabled(_:)")
+	func withCompressionEnabled(_ value: Bool) -> Self
+	func compressionEnabled(_ value: Bool) -> Self
+	func withHelloExecution(_ value: Bool) -> Self
+	@available(*, deprecated, renamed: "useCustomMessageManager(_:)")
+	func withMessageManager(_ messageManager: BskyMessageManager) -> Self
+	func useCustomMessageManager(_ messageManager: BskyMessageManager) -> Self
+	func dedicatedThreads(count: Int) -> Self
+	func applyContentFilter(by terms: [String]) -> Self
+	func applyHashtagFilter(by hashtags: [String]) -> Self
     
-    mutating func reset() async 
-    func build() async throws -> BskyFirehoseClient
+    func reset()
+	func build() throws -> BskyFirehoseClient
 }

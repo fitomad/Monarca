@@ -16,6 +16,8 @@ Monarca is a Swift project designed to consume the BlueSky Firehose using the [J
 	- `app.bsky.graph.block`
 	- `app.bsky.feed.post`
 	- `app.bsky.graph.starterpack`
+	- `app.bsky.feed.threadgate`
+	- `app.bsky.feed.postgate`
 
 ## Requirements
 
@@ -35,7 +37,7 @@ Include the following line in the `dependencies` section of your *Package.swift*
 ...
 dependencies: [
 	// 🦋 Monarca
-	.package(url: "https://github.com/fitomad/monarca.git", from: "0.1.0")
+	.package(url: "https://github.com/fitomad/monarca.git", from: "0.2.0")
 ]
 ...
 ```
@@ -54,33 +56,34 @@ Monarca use a [Builder pattern](https://refactoring.guru/design-patterns/builder
 
 The builder is available through the `DefaultFirehoseClientBuilder` class. You can configure the following Jetstream connection with these builder functions.
 
-- Jetstream server - `withHost`: **Mandatory**. Select one of the four general available Jetstream servers or connect to a custon server using the `.custom(server:)` case, where `server` is a `String` that contains the URL to your server.
-- `wantedCollections` - `withCollections`: A `String` array with the collection's NSID.
+- Jetstream server - `connecto(to:)`: **Mandatory**. Select one of the four general available Jetstream servers or connect to a custon server using the `.custom(server:)` case, where `server` is a `String` that contains the URL to your server.
+- `wantedCollections` - `forCollections`: A `String` array with the collection's NSID.
 - `wantedDids` - `withDecentralizedIdentifiers`: A `String` array with the repo DIDs to filter which records you receive on your stream.
-- `compress` - `withCompression`: A boolean value to enable `zstd` compression. Default `false`
+- `compress` - `compressionEnabled`: A boolean value to enable `zstd` compression. Default `false`
 - `requireHello` - `withHelloExecution`: A boolean value to replay/live-tail until the server recevies a `SubscriberOptionsUpdatePayload` over the socket in a *Subscriber Sourced Message*. Default `false`
-- `maxMessageSizeBytes` - `withMaximumMessageSize`: Filters by message size. You can set this size using the helper enumeration `MessageSize`
-- `cursor` - `withPlayback`: A unix microseconds timestamp cursor to begin playback if you reconnect or connect to a new Jetstream server. You can set the value using the helper enumeration `Playback`
+- `maxMessageSizeBytes` - `maximumMessageSizeAllowed`: Filters by message size. You can set this size using the helper enumeration `MessageSize`
+- `cursor` - `messagesPlayback(since:)`: A unix microseconds timestamp cursor to begin playback if you reconnect or connect to a new Jetstream server. You can set the value using the helper enumeration `Playback`
 
 This connection reveices all Bluesky messages for all collection and DIDs from the `jetstream1` server located in the US east coast. No compression enabled, witho no `hello` command needed and with no message size limitation.
 
 ```swift
 let bskyFirehoseClient = try await DefaultFirehoseClientBuilder()
-	.withHost(.usaEast1)
+	.connect(to: .usaEast1)
 	.build()
 ```
 
 This example connection uses all the settings available
 
 ```swift
-let bskyFirehoseClient = try await DefaultFirehoseClientBuilder()
-	.withHost(.usaEast1)
-	.withCollections([ "app.bsky.feed.post", "app.bsky.feed.like" ])
-	.withDecentralizedIdentifiers([ "did:97531", "did:13579" ])
-	.withCompressionEnabled(true)
-	.withHelloExecution(true)
-	.withMaximumMessageSize(.kilobytes(value: 2048))
-	.withPlayback(.seconds(5))
+let firehoseClient = try DefaultFirehoseClientBuilder()
+	.connect(to: .usaEast1)
+	.forCollections([ .post, .repost, .like ])
+	.withDecentralizedIdentifiers(Constants.customIdentifierList)
+	.compressionEnabled(false)
+	.withHelloExecution(false)
+	.maximumMessageSizeAllowed(.kilobytes(value: 2048))
+	.messagesPlayback(since: .seconds(5))
+	.dedicatedThreads(count: 8)
 	.build()
 ```
 
@@ -158,8 +161,8 @@ Once you finish to develop the custom message manager component, use the `withMe
 
 ```swift
 let bskyFirehoseClient = try await DefaultFirehoseClientBuilder()
-	.withHost(.usaEast1)
-	.withMessageManager(MockMessageManager)
+	.connect(to: .usaEast1)
+	.useCustomMessageManager(MockMessageManager)
 	.build()
 ```
 
@@ -175,6 +178,19 @@ Monarca is licensed under the MIT License. See LICENSE for details.
 - [Jetstream Documentation](https://docs.bsky.app/blog/jetstream)
 
 ## Version history
+
+### 0.2.0
+
+- Migrate from the `URLSessionWebSocketTask` to the [SwiftNIO](https://github.com/apple/swift-nio) based WebSocket connection using the [WebSocketKit](https://github.com/vapor/websocket-kit) framework
+- Renaming some `BskyFirehoseClientBuilder` functions to bring a *Fluid* approach to the API. Old funcions are now marked as *deprecated* and will be removed in future versions.
+- Work to adopt Swift 6 Concurrency model is still in progress.
+- Now you can filter `app.bsky.feed.post` messages by hashtag or by content with the new functions availables in the `BskyFirehoseClientBuilder` implementation
+	- `applyContentFilter(by:)` Process only those messages that contains 1 or N of the given hashtags
+	- `applyHashtagFilter(by:)` Process only those messages that contains 1 or N of the given words
+- Information about **video** in a *Post* message.
+- Support for the following Commit collections
+	- `app.bsky.feed.threadgate`
+	- `app.bsky.feed.postgate`
 
 ### 0.1.0
 

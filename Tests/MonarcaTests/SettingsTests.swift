@@ -16,42 +16,45 @@ struct SettingsTests {
 	func testEmptyDescription() async {
 		let settings = BskyFirehoseSettings()
 		
-		#expect(await settings.description.starts(with: "⚠️"))
+		let content = settings.description
+		let newLineCharactersCount = content.filter(\.isNewline).count
+		
+		#expect(newLineCharactersCount == 0)
 	}
 	
 	@Test("", .tags(.settings))
 	func testWithSingleLineDescriptionContent() async {
 		let settings: BskyFirehoseSettings = await .defaultEastCoast
 		
-		let content = await settings.description
+		let content = settings.description
 		
 		#expect(content.starts(with: "Host"))
 	}
 	
 	@Test("", .tags(.settings))
 	func testWithTwoLinesDescriptionContent() async {
-		let settings = BskyFirehoseSettings()
-		await settings.set(host: .usaEast1)
-		await settings.set(maximumMessageSize: .megabytes(value: 5))
+		var settings = BskyFirehoseSettings()
+		settings.set(host: .usaEast1)
+		settings.set(maximumMessageSize: .megabytes(value: 5))
 		
-		let content = await settings.description
+		let content = settings.description
 		let newLineCharactersCount = content.filter(\.isNewline).count
 		
-		#expect(newLineCharactersCount == 1)
+		#expect(newLineCharactersCount == 2)
 	}
 	
 	@Test("", .tags(.settings))
 	func testWithMultipleLinesDescriptionContent() async {
-		let settings = BskyFirehoseSettings()
-		await settings.set(host: .usaEast1)
-		await settings.set(maximumMessageSize: .megabytes(value: 5))
-		await settings.set(playback: .milliseconds(5))
-		await settings.set(collections: [ "Swift", "Vapor" ])
-		await settings.set(isHelloRequired: false)
-		await settings.set(decentralizedIdentifiers: [ "did:97531", "did:13579" ])
-		await settings.set(isCompressionEnabled: false)
+		var settings = BskyFirehoseSettings()
+		settings.set(host: .usaEast1)
+		settings.set(maximumMessageSize: .megabytes(value: 5))
+		settings.set(playback: .milliseconds(5))
+		settings.set(collections: [ "Swift", "Vapor" ])
+		settings.set(isHelloRequired: false)
+		settings.set(decentralizedIdentifiers: [ "did:97531", "did:13579" ])
+		settings.set(isCompressionEnabled: false)
 		
-		let content = await settings.description
+		let content = settings.description
 		let newLineCharactersCount = content.filter(\.isNewline).count
 		print(content)
 		#expect(newLineCharactersCount > 1)

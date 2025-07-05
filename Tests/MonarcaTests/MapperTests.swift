@@ -23,8 +23,8 @@ struct MapperTests {
 	
 	@Test("", .tags(.mapper))
 	func testMapperURL() async throws {
-		let settings = BskyFirehoseSettings()
-		await settings.set(host: .usaEast1)
+		var settings = BskyFirehoseSettings()
+		settings.set(host: .usaEast1)
 		
 		let mapper = BskyFirehoseSettingsMapper()
 			
@@ -35,10 +35,10 @@ struct MapperTests {
 	
 	@Test("", .tags(.mapper))
 	func testMapperSigleValuesInCollectionsURL() async throws {
-		let settings = BskyFirehoseSettings()
-		await settings.set(host: .usaEast1)
-		await settings.set(collections: [ "swift" ])
-		await settings.set(decentralizedIdentifiers: [ "did:97531" ])
+		var settings = BskyFirehoseSettings()
+		settings.set(host: .usaEast1)
+		settings.set(collections: [ "swift" ])
+		settings.set(decentralizedIdentifiers: [ "did:97531" ])
 		
 		let mapper = BskyFirehoseSettingsMapper()
 			
@@ -49,10 +49,10 @@ struct MapperTests {
 	
 	@Test("", .tags(.mapper))
 	func testMapperMultipleValuesInCollectionsURL() async throws {
-		let settings = BskyFirehoseSettings()
-		await settings.set(host: .usaEast1)
-		await settings.set(collections: [ "swift" ])
-		await settings.set(decentralizedIdentifiers: [ "did:97531" ])
+		var settings = BskyFirehoseSettings()
+		settings.set(host: .usaEast1)
+		settings.set(collections: [ "swift" ])
+		settings.set(decentralizedIdentifiers: [ "did:97531" ])
 		
 		let mapper = BskyFirehoseSettingsMapper()
 			
@@ -63,14 +63,14 @@ struct MapperTests {
 	
 	@Test("", .tags(.mapper))
 	func testMapperFullParametersURL() async throws {
-		let settings = BskyFirehoseSettings()
-		await settings.set(host: .usaEast1)
-		await settings.set(collections: [ "swift", "objc" ])
-		await settings.set(decentralizedIdentifiers: [ "did:97531", "did:13579" ])
-		await settings.set(playback: .seconds(5))
-		await settings.set(maximumMessageSize: .kilobytes(value: 2))
-		await settings.set(isCompressionEnabled: false)
-		await settings.set(isHelloRequired: false)
+		var settings = BskyFirehoseSettings()
+		settings.set(host: .usaEast1)
+		settings.set(collections: [ "swift", "objc" ])
+		settings.set(decentralizedIdentifiers: [ "did:97531", "did:13579" ])
+		settings.set(playback: .seconds(5))
+		settings.set(maximumMessageSize: .kilobytes(value: 2))
+		settings.set(isCompressionEnabled: false)
+		settings.set(isHelloRequired: false)
 		
 		let mapper = BskyFirehoseSettingsMapper()
 			

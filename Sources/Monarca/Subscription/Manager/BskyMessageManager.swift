@@ -8,6 +8,7 @@
 import Foundation
 
 public protocol BskyMessageManager: Sendable {
+	mutating func addMessageHandlerFilters(_ filters: [any BskyMessageHandler])
 	func processMessage(content data: Data) async throws -> BskyMessage
     func processMessage(string value: String) async throws -> BskyMessage
 }

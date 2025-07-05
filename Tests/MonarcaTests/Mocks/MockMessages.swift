@@ -218,7 +218,7 @@ enum MockMessages {
 		"""
 	}
 	
-	static var commitPostWithFacet: String {
+	static var commitPostWithFacetLink: String {
 		"""
 		{
 		"did": "did:plc:4imeuitzy2wizyngczhdguzn",
@@ -286,6 +286,73 @@ enum MockMessages {
 		}
 		}
 		"""
+	}
+	
+	static var commitPostWithFacetTag: String {
+		#"""
+		  {
+			"did": "did:plc:bwyv46hd3sueap2ewknmczoe",
+			"time_us": 1751625577863550,
+			"kind": "commit",
+			"commit": {
+			  "rev": "3lt52i5ztju2s",
+			  "operation": "create",
+			  "collection": "app.bsky.feed.post",
+			  "rkey": "3lt52i5jl2s2y",
+			  "record": {
+				"$type": "app.bsky.feed.post",
+				"createdAt": "2025-07-04T10:39:35.679Z",
+				"embed": {
+				  "$type": "app.bsky.embed.video",
+				  "aspectRatio": { "height": 720, "width": 1280 },
+				  "video": {
+					"$type": "blob",
+					"ref": {
+					  "$link": "bafkreigdnbtqfjvuvigsfxemhkz22znxf45sn3fcmt3net5advmlfgxonu"
+					},
+					"mimeType": "video/mp4",
+					"size": 5661796
+				  }
+				},
+				"facets": [
+				  {
+					"features": [
+					  { "$type": "app.bsky.richtext.facet#tag", "tag": "MarioKartWorld" }
+					],
+					"index": { "byteEnd": 186, "byteStart": 171 }
+				  },
+				  {
+					"features": [
+					  { "$type": "app.bsky.richtext.facet#tag", "tag": "VTuber" }
+					],
+					"index": { "byteEnd": 194, "byteStart": 187 }
+				  },
+				  {
+					"features": [
+					  { "$type": "app.bsky.richtext.facet#tag", "tag": "TwitchClips" }
+					],
+					"index": { "byteEnd": 207, "byteStart": 195 }
+				  },
+				  {
+					"features": [
+					  { "$type": "app.bsky.richtext.facet#tag", "tag": "CozyChaos" }
+					],
+					"index": { "byteEnd": 218, "byteStart": 208 }
+				  },
+				  {
+					"features": [
+					  { "$type": "app.bsky.richtext.facet#tag", "tag": "ClutchPlay" }
+					],
+					"index": { "byteEnd": 230, "byteStart": 219 }
+				  }
+				],
+				"langs": ["en"],
+				"text": "Just pulled off the most insane ghost clutch in Mario Kart World 👻⚡\nFrom 3rd to 1st in the blink of an eye—pure chaos and perfect timing!\n🎥 Check it out: [link]\n#MarioKartWorld #VTuber #TwitchClips #CozyChaos #ClutchPlay"
+			  },
+			  "cid": "bafyreidvpuzastwn2mm76wocun3x7gs6g3nlzf6edxammrpehodaqej4im"
+			}
+		  }
+		"""#
 	}
 	
 	static var commitDeleted: String {

@@ -16,6 +16,8 @@ public enum Record: Codable, Sendable {
 	case profile(payload: Record.Profile)
 	case post(payload: Record.Post)
 	case starterPack(payload: Record.StarterPack)
+	case threadGate(payload: Record.ThreadGate)
+	case postGate(payload: Record.PostGate)
 }
 
 
