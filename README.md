@@ -16,6 +16,8 @@ Monarca is a Swift project designed to consume the BlueSky Firehose using the [J
 	- `app.bsky.graph.block`
 	- `app.bsky.feed.post`
 	- `app.bsky.graph.starterpack`
+	- `app.bsky.feed.threadgate`
+	- `app.bsky.feed.postgate`
 
 ## Requirements
 
@@ -185,7 +187,7 @@ Monarca is licensed under the MIT License. See LICENSE for details.
 - Now you can filter `app.bsky.feed.post` messages by hashtag or by content with the new functions availables in the `BskyFirehoseClientBuilder` implementation
 	- `applyContentFilter(by:)` Process only those messages that contains 1 or N of the given hashtags
 	- `applyHashtagFilter(by:)` Process only those messages that contains 1 or N of the given words
-- Information about**video** in a *Post* message.
+- Information about **video** in a *Post* message.
 - Support for the following Commit collections
 	- `app.bsky.feed.threadgate`
 	- `app.bsky.feed.postgate`
