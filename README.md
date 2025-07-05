@@ -185,6 +185,7 @@ Monarca is licensed under the MIT License. See LICENSE for details.
 - Now you can filter `app.bsky.feed.post` messages by hashtag or by content with the new functions availables in the `BskyFirehoseClientBuilder` implementation
 	- `applyContentFilter(by:)` Process only those messages that contains 1 or N of the given hashtags
 	- `applyHashtagFilter(by:)` Process only those messages that contains 1 or N of the given words
+- Information about**video** in a *Post* message.
 
 ### 0.1.0
 
