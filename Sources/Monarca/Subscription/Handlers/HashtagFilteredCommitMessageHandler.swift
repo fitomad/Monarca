@@ -1,22 +1,15 @@
-//
-//  FilteredCommitMessageHandler.swift
-//  Monarca
-//
-//  Created by Adolfo Vera Blasco on 3/7/25.
-//
-
 import Foundation
 
-struct FilteredCommitMessageHandler {
+struct HashtagFilteredCommitMessageHandler {
 	private(set) var nextHandler: (any BskyMessageHandler)?
-	private let filterTerm: String
+	private let hashtags: [String]
 	
-	init(by term: String) {
-		filterTerm = term
+	init(by hashtags: [String[]) {
+		self.hashtags = hashtags
 	}
 }
 
-extension FilteredCommitMessageHandler: BskyMessageHandler {
+extension HashtagFilteredCommitMessageHandler: BskyMessageHandler {
 	mutating func setNextHandler(_ handler: any BskyMessageHandler) {
 		self.nextHandler = handler
 	}

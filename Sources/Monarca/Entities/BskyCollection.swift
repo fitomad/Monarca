@@ -7,7 +7,9 @@
 
 import Foundation
 
-public enum Collection: String, Codable, Sendable {
+//public typealias A = BskyCollection
+
+public enum BskyCollection: String, Codable, Sendable {
 	case repost = "app.bsky.feed.repost"
 	case like = "app.bsky.feed.like"
 	case follow = "app.bsky.graph.follow"
