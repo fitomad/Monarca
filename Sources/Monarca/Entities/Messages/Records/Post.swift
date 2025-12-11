@@ -30,11 +30,15 @@ extension Record {
 extension Record.Post {
 	public struct Embedded: Codable, Sendable {
 		public let images: [Record.Post.PostImage]?
-		public let video: Record.Post.PostVideo?
+		public let video: Record.Video?
+		public let aspectRatio: Record.AspectRatio?
+		public let alternateText: String?
 		
 		private enum CodingKeys: String, CodingKey {
 			case images
 			case video
+			case aspectRatio
+			case alternateText = "alt"
 		}
 	}
 	
@@ -46,18 +50,6 @@ extension Record.Post {
 		private enum CodingKeys: String, CodingKey {
 			case alternateText = "alt"
 			case image
-			case aspectRatio
-		}
-	}
-	
-	public struct PostVideo: Codable, Sendable {
-		public let alternateText: String?
-		public let video: Record.Video
-		public let aspectRatio: Record.AspectRatio?
-		
-		private enum CodingKeys: String, CodingKey {
-			case alternateText = "alt"
-			case video
 			case aspectRatio
 		}
 	}

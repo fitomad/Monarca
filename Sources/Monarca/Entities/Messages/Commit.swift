@@ -77,8 +77,16 @@ extension BskyMessage.Commit {
 							decodedRecord = .profile(payload: data)
 						}
 					case .post:
+						/*
 						if let data = try? values.decode(Record.Post.self, forKey: .record) {
 							decodedRecord = .post(payload: data)
+						}
+						 */
+						do {
+							let data = try values.decode(Record.Post.self, forKey: .record)
+							decodedRecord = .post(payload: data)
+						} catch {
+							print(error)
 						}
 					case .starterPack:
 						if let data = try? values.decode(Record.StarterPack.self, forKey: .record) {
