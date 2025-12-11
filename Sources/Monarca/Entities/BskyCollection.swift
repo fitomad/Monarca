@@ -22,6 +22,7 @@ public enum BskyCollection: String, Codable, Sendable {
 	case threadGate = "app.bsky.feed.threadgate"
 	case postGate = "app.bsky.feed.postgate"
 	case teal = "fm.teal.alpha.actor.status"
+	case notificationDeclaration = "app.bsky.notification.declaration"
 }
 
 extension BskyCollection: CustomStringConvertible {

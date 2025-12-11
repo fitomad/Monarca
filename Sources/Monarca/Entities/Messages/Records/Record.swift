@@ -19,6 +19,7 @@ public enum Record: Codable, Sendable {
 	case threadGate(payload: Record.ThreadGate)
 	case postGate(payload: Record.PostGate)
 	case teal(payload: Record.AlphaTeal)
+	case notificationDeclaration(payload: Record.Notification.Declaration)
 }
 
 

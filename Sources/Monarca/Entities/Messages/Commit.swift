@@ -96,6 +96,10 @@ extension BskyMessage.Commit {
 						if let data = try? values.decode(Record.AlphaTeal.self, forKey: .record) {
 							decodedRecord = .teal(payload: data)
 						}
+					case .notificationDeclaration:
+						if let data = try? values.decode(Record.Notification.Declaration.self, forKey: .record) {
+							decodedRecord = .notificationDeclaration(payload: data)
+						}
 				}
 			} catch {
 				throw BskyMessageManagerError.nonValidMessage
