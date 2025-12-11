@@ -41,23 +41,23 @@ public actor BskyFirehoseClient {
 		}
 		
 		WebSocket.connect(to: bskyURL, on: eventLoopGroup) { ws in
-			ws.onText { ws, content in
+			ws.onText { [weak self] ws, content in
 				do {
 					let incomingMessage = try await bskyMessageManager.processMessage(string: content)
-					await self.onMessageReceived?(incomingMessage)
+					await self?.onMessageReceived?(incomingMessage)
 				} catch {
-					await self.onErrorProcessingMessage?(.invalidMessage(content: .string(content)))
+					await self?.onErrorProcessingMessage?(.invalidMessage(content: .string(content)))
 				}
 			}
 			
-			ws.onBinary { ws, byteBuffer in
+			ws.onBinary { [weak self] ws, byteBuffer in
 				let bytes = Data(buffer: byteBuffer)
 				
 				do {
 					let incomingMessage = try await bskyMessageManager.processMessage(content: bytes)
-					await self.onMessageReceived?(incomingMessage)
+					await self?.onMessageReceived?(incomingMessage)
 				} catch {
-					await self.onErrorProcessingMessage?(.invalidMessage(content: .data(bytes)))
+					await self?.onErrorProcessingMessage?(.invalidMessage(content: .data(bytes)))
 				}
 			}
 		}
