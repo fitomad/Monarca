@@ -30,7 +30,7 @@ struct MapperTests {
 			
 		let url = try await mapper.mapToURL(from: settings)
 		
-		#expect(url.absoluteString == FireshoseHost.usaEast1.endpoint)
+		#expect(url.absoluteString == FirehoseHost.usaEast1.endpoint)
 	}
 	
 	@Test("", .tags(.mapper))

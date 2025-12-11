@@ -8,8 +8,8 @@
 
 public protocol BskyFirehoseClientBuilder {
 	@available(*, deprecated, renamed: "connect(to:)")
-    func withHost(_ server: FireshoseHost) -> Self
-	func connect(to host: FireshoseHost) -> Self
+    func withHost(_ server: FirehoseHost) -> Self
+	func connect(to host: FirehoseHost) -> Self
 	@available(*, deprecated, renamed: "forCollections(_:)")
 	func withCollections(_ collection: [String]) -> Self
 	func forCollections(_ collection: [BskyCollection]) -> Self

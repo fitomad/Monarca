@@ -19,7 +19,7 @@ struct BuilderTests {
 	}
 	
 	@Test("", .tags(.builder), arguments: Constants.serverList)
-	func testClientURL(server: FireshoseHost) async throws {
+	func testClientURL(server: FirehoseHost) async throws {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: server)
 			.build()
@@ -29,7 +29,7 @@ struct BuilderTests {
 	}
 	
 	@Test("", .tags(.builder), arguments: Constants.customServerList)
-	func testClientCustomURL(_ custom: FireshoseHost) async throws  {
+	func testClientCustomURL(_ custom: FirehoseHost) async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: custom)
 			.build()
@@ -290,16 +290,16 @@ extension Tag {
 }
 
 fileprivate enum Constants {
-	static var serverList: [FireshoseHost] {
+	static var serverList: [FirehoseHost] {
 		[
-			FireshoseHost.usaEast1,
-			FireshoseHost.usaWest1,
-			FireshoseHost.usaEast2,
-			FireshoseHost.usaWest2,
+			FirehoseHost.usaEast1,
+			FirehoseHost.usaWest1,
+			FirehoseHost.usaEast2,
+			FirehoseHost.usaWest2,
 		]
 	}
 	
-	static var customServerList: [FireshoseHost] {
+	static var customServerList: [FirehoseHost] {
 		[
 			.custom(server: "https://apple.com"),
 			.custom(server: "https://developer.apple.com"),
