@@ -13,11 +13,14 @@ public enum Record: Codable, Sendable {
 	case like(payload: Record.Like)
 	case listItem(payload: Record.ListItem)
 	case block(payload: Record.Block)
-	case profile(payload: Record.Profile)
+	case profile(payload: Record.Actor.Profile)
+	case actorStatus(payload: Record.Actor.Status)
 	case post(payload: Record.Post)
 	case starterPack(payload: Record.StarterPack)
 	case threadGate(payload: Record.ThreadGate)
 	case postGate(payload: Record.PostGate)
+	case teal(payload: Record.AlphaTeal)
+	case notificationDeclaration(payload: Record.Notification.Declaration)
 }
 
 
