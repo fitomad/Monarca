@@ -14,11 +14,15 @@ public typealias MessageReceivedClosure = @Sendable (BskyMessage) -> Void
 public typealias ErrorReceivedClosure = @Sendable (BskyFirehoseError) -> Void
 
 public actor BskyFirehoseClient {
-	private var onMessageReceived: MessageReceivedClosure?
-	private var onErrorProcessingMessage: ErrorReceivedClosure?
 	public let settings: BskyFirehoseSettings
 	
+	private var onMessageReceived: MessageReceivedClosure?
+	private var onErrorProcessingMessage: ErrorReceivedClosure?
+	
 	private let eventLoopGroup: MultiThreadedEventLoopGroup
+	private var webSocket: WebSocket?
+	
+	private var status: BskyFirehoseClient.Status = .closed
 	
 	private var mapper: BskyFirehoseSettingsMapper {
 		BskyFirehoseSettingsMapper()
@@ -40,7 +44,12 @@ public actor BskyFirehoseClient {
 			throw BskyFirehoseError.invalidConnectionParameters
 		}
 		
-		WebSocket.connect(to: bskyURL, on: eventLoopGroup) { ws in
+		_ = WebSocket.connect(to: bskyURL, on: eventLoopGroup) { ws in
+			Task { [weak self] in
+				await self?.setWebSocket(ws)
+				await self?.setStatus(.connected)
+			}
+			
 			ws.onText { [weak self] ws, content in
 				do {
 					let incomingMessage = try await bskyMessageManager.processMessage(string: content)
@@ -62,6 +71,19 @@ public actor BskyFirehoseClient {
 			}
 		}
 	}
+	
+	public func stop() async throws {
+		guard status == .connected else { return }
+		
+		try await webSocket?.close()
+		webSocket = nil
+		status = .closed
+	}
+	
+	public func shutdown() async throws {
+		try await stop()
+		try await eventLoopGroup.shutdownGracefully()
+	}
 
 	public func onMessageReceived(_ perform: @escaping MessageReceivedClosure) {
 		self.onMessageReceived = perform
@@ -69,6 +91,14 @@ public actor BskyFirehoseClient {
 	
 	public func onErrorProcessingMessage(_ perform: @escaping ErrorReceivedClosure) {
 		self.onErrorProcessingMessage = perform
+	}
+	
+	private func setWebSocket(_ ws: WebSocket) {
+		webSocket = ws
+	}
+	
+	private func setStatus(_ newStatus: BskyFirehoseClient.Status) {
+		status = newStatus
 	}
 }
 
