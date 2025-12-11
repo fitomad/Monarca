@@ -92,6 +92,10 @@ extension BskyMessage.Commit {
 						if let data = try? values.decode(Record.PostGate.self, forKey: .record) {
 							decodedRecord = .postGate(payload: data)
 						}
+					case .teal:
+						if let data = try? values.decode(Record.AlphaTeal.self, forKey: .record) {
+							decodedRecord = .teal(payload: data)
+						}
 				}
 			} catch {
 				throw BskyMessageManagerError.nonValidMessage
