@@ -15,7 +15,7 @@ public enum BskyCollection: String, Codable, Sendable {
 	case like = "app.bsky.feed.like"
 	case follow = "app.bsky.graph.follow"
 	case listItem = "app.bsky.graph.listitem"
-	case profile = "app.bsky.actor.profile"
+	case actorProfile = "app.bsky.actor.profile"
 	case actorStatus = "app.bsky.actor.status"
 	case block = "app.bsky.graph.block"
 	case post = "app.bsky.feed.post"

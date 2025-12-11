@@ -185,6 +185,7 @@ Monarca is licensed under the MIT License. See LICENSE for details.
 	- `fm.teal.alpha.actor.status`
 	- `app.bsky.notification.declaration`
 	- `app.bsky.actor.status`
+- The `BskyCollection` element `profile` is now `actorProfile`
 
 ### 0.2.0
 
