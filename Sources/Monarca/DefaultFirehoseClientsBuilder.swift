@@ -16,7 +16,7 @@ public final class DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 		filterMessageHandler = []
 	}
 	
-	public func connect(to host: FireshoseHost) -> Self {
+	public func connect(to host: FirehoseHost) -> Self {
 		settings.set(host: host)
 		return self
 	}
@@ -103,7 +103,7 @@ public final class DefaultFirehoseClientBuilder: BskyFirehoseClientBuilder {
 
 extension DefaultFirehoseClientBuilder {
 	@available(*, deprecated, renamed: "connect(to:)")
-	public func withHost(_ server: FireshoseHost) -> Self {
+	public func withHost(_ server: FirehoseHost) -> Self {
 		return connect(to: server)
 	}
 	

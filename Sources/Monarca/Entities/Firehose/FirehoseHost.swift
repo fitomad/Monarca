@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum FireshoseHost: Sendable {
+public enum FirehoseHost: Sendable {
     case usaEast1
     case usaEast2
     case usaWest1

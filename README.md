@@ -179,7 +179,19 @@ Monarca is licensed under the MIT License. See LICENSE for details.
 
 ## Version history
 
-### 0.30
+### 0.3.2
+
+- Fix parsing of embed video content in a commit
+- Unit test description for some of the test suites
+- Better connection status information
+- New `stop` and `shutdown` functions
+
+### 0.3.1
+
+- Memory management improvements
+- Fix a misspelling issue related with `FirehoseHost` type
+
+### 0.3.0
 
 - Support for the following Commit collection
 	- `fm.teal.alpha.actor.status`

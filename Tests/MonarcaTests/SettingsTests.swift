@@ -12,7 +12,7 @@ import Testing
 
 @Suite("BskyFirehoseSettings tests")
 struct SettingsTests {
-	@Test("", .tags(.settings))
+	@Test("Settings. Default values", .tags(.settings))
 	func testEmptyDescription() async {
 		let settings = BskyFirehoseSettings()
 		
@@ -22,7 +22,7 @@ struct SettingsTests {
 		#expect(newLineCharactersCount == 0)
 	}
 	
-	@Test("", .tags(.settings))
+	@Test("Settings. Single line description", .tags(.settings))
 	func testWithSingleLineDescriptionContent() async {
 		let settings: BskyFirehoseSettings = await .defaultEastCoast
 		
@@ -31,7 +31,7 @@ struct SettingsTests {
 		#expect(content.starts(with: "Host"))
 	}
 	
-	@Test("", .tags(.settings))
+	@Test("Settings. 2 lines description", .tags(.settings))
 	func testWithTwoLinesDescriptionContent() async {
 		var settings = BskyFirehoseSettings()
 		settings.set(host: .usaEast1)
@@ -43,7 +43,7 @@ struct SettingsTests {
 		#expect(newLineCharactersCount == 2)
 	}
 	
-	@Test("", .tags(.settings))
+	@Test("Settings. Multiple lines description", .tags(.settings))
 	func testWithMultipleLinesDescriptionContent() async {
 		var settings = BskyFirehoseSettings()
 		settings.set(host: .usaEast1)

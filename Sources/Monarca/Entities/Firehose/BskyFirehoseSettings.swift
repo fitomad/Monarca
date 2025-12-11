@@ -8,7 +8,7 @@
 import Foundation
 
 public struct BskyFirehoseSettings: Sendable {
-    public internal(set) var host: FireshoseHost?
+    public internal(set) var host: FirehoseHost?
 	public internal(set) var collections: [String]?
 	public internal(set) var decentralizedIdentifiers: [String]?
 	public internal(set) var maximumMessageSize: MessageSize?
@@ -18,7 +18,7 @@ public struct BskyFirehoseSettings: Sendable {
 	public internal(set) var messageManager: (any BskyMessageManager)?
 	public internal(set) var dedicatedThreads = 2
 	
-	mutating func set(host: FireshoseHost) {
+	mutating func set(host: FirehoseHost) {
 		self.host = host
 	}
 	
