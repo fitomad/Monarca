@@ -179,6 +179,11 @@ Monarca is licensed under the MIT License. See LICENSE for details.
 
 ## Version history
 
+### 0.30
+
+- Support for the following Commit collection
+	- `fm.teal.alpha.actor.status`
+
 ### 0.2.0
 
 - Migrate from the `URLSessionWebSocketTask` to the [SwiftNIO](https://github.com/apple/swift-nio) based WebSocket connection using the [WebSocketKit](https://github.com/vapor/websocket-kit) framework
