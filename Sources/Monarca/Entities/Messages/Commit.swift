@@ -73,7 +73,7 @@ extension BskyMessage.Commit {
 							decodedRecord = .block(payload: data)
 						}
 					case .profile:
-						if let data = try? values.decode(Record.Profile.self, forKey: .record) {
+						if let data = try? values.decode(Record.Actor.Profile.self, forKey: .record) {
 							decodedRecord = .profile(payload: data)
 						}
 					case .post:
@@ -99,6 +99,10 @@ extension BskyMessage.Commit {
 					case .notificationDeclaration:
 						if let data = try? values.decode(Record.Notification.Declaration.self, forKey: .record) {
 							decodedRecord = .notificationDeclaration(payload: data)
+						}
+					case .actorStatus:
+						if let data = try? values.decode(Record.Actor.Status.self, forKey: .record) {
+							decodedRecord = .actorStatus(payload: data)
 						}
 				}
 			} catch {

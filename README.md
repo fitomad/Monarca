@@ -184,6 +184,7 @@ Monarca is licensed under the MIT License. See LICENSE for details.
 - Support for the following Commit collection
 	- `fm.teal.alpha.actor.status`
 	- `app.bsky.notification.declaration`
+	- `app.bsky.actor.status`
 
 ### 0.2.0
 
