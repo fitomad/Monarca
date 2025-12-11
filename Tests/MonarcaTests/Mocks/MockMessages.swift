@@ -290,7 +290,7 @@ enum MockMessages {
 	
 	static var commitPostWithFacetTag: String {
 		#"""
-		  {
+		{
 			"did": "did:plc:bwyv46hd3sueap2ewknmczoe",
 			"time_us": 1751625577863550,
 			"kind": "commit",
@@ -351,7 +351,7 @@ enum MockMessages {
 			  },
 			  "cid": "bafyreidvpuzastwn2mm76wocun3x7gs6g3nlzf6edxammrpehodaqej4im"
 			}
-		  }
+		}
 		"""#
 	}
 	

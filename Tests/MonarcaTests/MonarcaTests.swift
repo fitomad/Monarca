@@ -6,8 +6,8 @@ struct MonarcaTests {
 	@Test("Receive a message from the BlueSky Jetstream", .tags(.client))
 	func testClientMessageReceived() async throws {
 		let bskyClient = try DefaultFirehoseClientBuilder()
-			.withHost(.usaEast1)
-			.withMessageManager(MockMessageManager())
+			.connect(to: .usaEast1)
+			.useCustomMessageManager(MockMessageManager())
 			.build()
 		
 		await bskyClient.onMessageReceived { message in

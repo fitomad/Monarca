@@ -11,7 +11,7 @@ import Testing
 
 @Suite("Mapper from settings to URL tests")
 struct MapperTests {
-	@Test("", .tags(.mapper))
+	@Test("Mapping unavailble URL", .tags(.mapper))
 	func testMapperUnavailableURL() async throws {
 		await #expect(throws: FirehoseMapperError.malformedParameterURL) {
 			let settings = BskyFirehoseSettings()
@@ -21,7 +21,7 @@ struct MapperTests {
 		}
 	}
 	
-	@Test("", .tags(.mapper))
+	@Test("Mapper URL", .tags(.mapper))
 	func testMapperURL() async throws {
 		var settings = BskyFirehoseSettings()
 		settings.set(host: .usaEast1)
@@ -33,7 +33,7 @@ struct MapperTests {
 		#expect(url.absoluteString == FirehoseHost.usaEast1.endpoint)
 	}
 	
-	@Test("", .tags(.mapper))
+	@Test("Mappping single values in collection", .tags(.mapper))
 	func testMapperSigleValuesInCollectionsURL() async throws {
 		var settings = BskyFirehoseSettings()
 		settings.set(host: .usaEast1)
@@ -47,7 +47,7 @@ struct MapperTests {
 		#expect(url.absoluteString == Constants.singleCollectionElementsURL)
 	}
 	
-	@Test("", .tags(.mapper))
+	@Test("Mapping multiple values in collection", .tags(.mapper))
 	func testMapperMultipleValuesInCollectionsURL() async throws {
 		var settings = BskyFirehoseSettings()
 		settings.set(host: .usaEast1)
@@ -61,7 +61,7 @@ struct MapperTests {
 		#expect(url.absoluteString == Constants.singleCollectionElementsURL)
 	}
 	
-	@Test("", .tags(.mapper))
+	@Test("Mapping full parameters", .tags(.mapper))
 	func testMapperFullParametersURL() async throws {
 		var settings = BskyFirehoseSettings()
 		settings.set(host: .usaEast1)

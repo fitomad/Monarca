@@ -11,14 +11,14 @@ import Testing
 
 @Suite("BskyFirehose client builder")
 struct BuilderTests {
-	@Test("", .tags(.builder))
+	@Test("Default builder", .tags(.builder))
 	func testDefaultBuilding() async throws {
 		await #expect(throws: BskyFirehoseError.invalidConnectionParameters) {
 			let _ = try await DefaultFirehoseClientBuilder().build()
 		}
 	}
 	
-	@Test("", .tags(.builder), arguments: Constants.serverList)
+	@Test("Client with specific server", .tags(.builder), arguments: Constants.serverList)
 	func testClientURL(server: FirehoseHost) async throws {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: server)
@@ -28,7 +28,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.host!.endpoint == server.endpoint)
 	}
 	
-	@Test("", .tags(.builder), arguments: Constants.customServerList)
+	@Test("Client with custom server", .tags(.builder), arguments: Constants.customServerList)
 	func testClientCustomURL(_ custom: FirehoseHost) async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: custom)
@@ -38,7 +38,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.host!.endpoint == custom.endpoint)
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Collection set empty", .tags(.builder))
 	func testClientCollections() async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -49,7 +49,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.collections!.isEmpty)
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Collection set fake", .tags(.builder))
 	func testClientCustomCollections() async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -63,7 +63,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.collections!.contains("c"))
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Collection set", .tags(.builder))
 	func testClientBskyCollections() async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -77,7 +77,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.collections!.contains(BskyCollection.repost.description))
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + decentralized ID empty", .tags(.builder))
 	func testClientIdentifiers() async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -88,7 +88,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.decentralizedIdentifiers!.isEmpty)
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + decentralized ID", .tags(.builder))
 	func testClientCustomIdentifiers() async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -99,7 +99,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.decentralizedIdentifiers!.count == Constants.customIdentifierList.count)
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Compression enabled", .tags(.builder))
 	func testClientCompressionEnabled() async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -110,7 +110,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.isCompressionEnabled!)
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Compression disabled", .tags(.builder))
 	func testClientCompressionDisabled() async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -121,7 +121,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.isCompressionEnabled! == false)
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Hello", .tags(.builder))
 	func testClientHelloCommandEnabled() async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -132,7 +132,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.isHelloRequired!)
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Hello false", .tags(.builder))
 	func testClientHelloCommandDisabled() async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -143,7 +143,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.isHelloRequired! == false)
 	}
 	
-	@Test("", .tags(.builder), arguments: Constants.messagesSizeList)
+	@Test("Client with specific Server + Maximum message size", .tags(.builder), arguments: Constants.messagesSizeList)
 	func testMessageSizeLimit(testSet: (sut: MessageSize, expectedValue: Int)) async throws  {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -154,7 +154,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.maximumMessageSize! == testSet.expectedValue)
 	}
 	
-	@Test("", .tags(.builder), arguments: Constants.playbackList)
+	@Test("Client with specific Server + Playback", .tags(.builder), arguments: Constants.playbackList)
 	func testMessagePlayback(sut: Playback) async throws  {
 		let currentEpochTimestamp = Int(Date().timeIntervalSince1970)
 		let lowEpochBound = currentEpochTimestamp - 50_0000
@@ -170,7 +170,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.playback!.timeValue < maxEpochBound)
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Custom message handler", .tags(.builder))
 	func testClientMessageManager() async throws  {
 		let mockMessageManager = MockMessageManager()
 		let builder = DefaultFirehoseClientBuilder()
@@ -189,7 +189,7 @@ struct BuilderTests {
 		}
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Dedicated threads", .tags(.builder))
 	func testDedicatedThreads() async throws  {
 		let builder = DefaultFirehoseClientBuilder()
 		
@@ -201,7 +201,7 @@ struct BuilderTests {
 		#expect(await firehoseClient.settings.dedicatedThreads == 10)
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Hastag filter", .tags(.builder))
 	func testFilterHashtagManagerHandlerCount() async throws {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -215,7 +215,7 @@ struct BuilderTests {
 		}
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Content filte", .tags(.builder))
 	func testFilterContentManagerHandlerCount() async throws {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -229,7 +229,7 @@ struct BuilderTests {
 		}
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with specific Server + Hastag filte + Content filte", .tags(.builder))
 	func testFilterHashtagAndContentManagerHandlerCount() async throws {
 		let firehoseClient = try DefaultFirehoseClientBuilder()
 			.connect(to: .usaEast1)
@@ -244,7 +244,7 @@ struct BuilderTests {
 		}
 	}
 	
-	@Test("", .tags(.builder))
+	@Test("Client with all settings", .tags(.builder))
 	func testBuilderReset() async throws  {
 		let builder = DefaultFirehoseClientBuilder()
 		
